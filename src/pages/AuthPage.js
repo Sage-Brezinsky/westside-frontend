@@ -10,11 +10,18 @@ import {
   MdLoyalty,
 } from 'react-icons/lib/md';
 class AuthPage extends React.Component {
+  constructor (props) {
+    super (props);
+    this.state = {
+      authState: ''
+    }
+  }
   handleAuthState = authState => {
     if (authState === STATE_LOGIN) {
+      this.setState({authState: 'Login'})
       this.props.history.push('/login');
-      
     } else {
+      this.setState({authState: 'SignUp'})
       this.props.history.push('/signup');
     }
   };
@@ -35,7 +42,7 @@ class AuthPage extends React.Component {
       
           this.notificationSystem.addNotification({
             title: <MdImportantDevices />,
-            message: 'Login Success!',
+            message: `${this.state.authState} Success!`,
             level: 'success',
           });
         }, 1500);
@@ -49,7 +56,7 @@ class AuthPage extends React.Component {
       
           this.notificationSystem.addNotification({
             title: <MdImportantDevices />,
-            message: 'Login Failed!',
+            message: `${this.state.authState} Failed!`,
             level: 'error',
           });
         }, 1500);

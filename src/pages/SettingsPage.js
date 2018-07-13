@@ -151,25 +151,28 @@ class SettingsPage extends React.Component {
 
   generateServiceColumn() {
     const serviceColumn = [];
-    Object.keys(this.state.service[0]).map(key => {
-      if (key === 'provider')
-      {
-        serviceColumn.push({
-          Header: "Insurance Provider",
-          id: 'reimbursement',
-          Cell: this.renderEditable
-          });    
-      }
-      else
-      {
-        serviceColumn.push({
-          Header: key,
-          id: key,
-          Cell: this.renderEditable
-          });    
-      }
-    })
-    this.setState({serviceColumn});
+    if (this.state.service.length > 0)
+    {
+      Object.keys(this.state.service[0]).map(key => {
+        if (key === 'provider')
+        {
+          serviceColumn.push({
+            Header: "Insurance Provider",
+            id: 'reimbursement',
+            Cell: this.renderEditable
+            });    
+        }
+        else
+        {
+          serviceColumn.push({
+            Header: key,
+            id: key,
+            Cell: this.renderEditable
+            });    
+        }
+      })
+      this.setState({serviceColumn});
+    }
   }
 
   componentWillMount() {
@@ -214,39 +217,53 @@ class SettingsPage extends React.Component {
         <TabContent activeTab={this.state.activeTab}>
           <TabPane tabId="1">
             <Row>
-              <Col sm="12">
-                <ReactTable
-                  data={this.state.service}
-                  columns={this.state.serviceColumn}
-                    defaultPageSize={this.state.service.length}
-                    pageSize={this.state.service.length}
-                    className="-striped -highlight"
-                    showPageSizeOptions= {true}
-                    showPagination= {false}
-                  />
-              </Col>
-              <Col sm="12" className="pull-right">
-                <Button style={{float:'right'}}>Cancel</Button>
-                <Button color="primary" onClick={() => this.save()} style={{float:'right', marginRight: '20px'}}>Save</Button>
-              </Col>
+              {
+                this.state.service.length > 0 ? (
+                  <div>
+                    <Col sm="12">
+                      <ReactTable
+                        data={this.state.service}
+                        columns={this.state.serviceColumn}
+                          defaultPageSize={this.state.service.length}
+                          pageSize={this.state.service.length}
+                          className="-striped -highlight"
+                          showPageSizeOptions= {true}
+                          showPagination= {false}
+                        />
+                    </Col>
+                    <Col sm="12" className="pull-right">
+                      <Button style={{float:'right'}}>Cancel</Button>
+                      <Button color="primary" onClick={() => this.save()} style={{float:'right', marginRight: '20px'}}>Save</Button>
+                    </Col>
+                  </div>
+                ): (
+                  <div style={{marginTop: '20px', marginLeft: '20px'}}>No Data!!!</div>
+                )
+              }
             </Row>
           </TabPane>
           <TabPane tabId="2">
             <Row style={{marginTop: '30px'}}>
               <Col sm="6">
-                <ReactTable
-                    data={this.state.service}
-                    columns={[{
-                      Header: "Services",
-                      id: 'service',
-                      Cell: this.renderEditable
-                      }]}
-                      defaultPageSize={this.state.service.length}
-                      pageSize={this.state.service.length}
-                      className="-striped -highlight"
-                      showPageSizeOptions= {true}
-                      showPagination= {false}
-                  />
+                {
+                  this.state.service.length > 0 ? (
+                    <ReactTable
+                        data={this.state.service}
+                        columns={[{
+                          Header: "Services",
+                          id: 'service',
+                          Cell: this.renderEditable
+                          }]}
+                          defaultPageSize={this.state.service.length}
+                          pageSize={this.state.service.length}
+                          className="-striped -highlight"
+                          showPageSizeOptions= {true}
+                          showPagination= {false}
+                      />
+                  ): (
+                    <div>No Data!!!</div>
+                  )
+                }
               </Col>
               <Col sm="6">
                 <Button color="primary" onClick={() => this.addNew('insurance_provider')}>Add Insurance Provider</Button>
@@ -256,20 +273,26 @@ class SettingsPage extends React.Component {
           <TabPane tabId="3">
             <Row style={{marginTop: '30px'}}>
                 <Col sm="6">
-                  <ReactTable
-                      data={Object.keys(this.state.service[0])}
-                      columns={[{
-                        Header: "Therapy PT Code",
-                        id: 'therapy',
-                        accessor: 'therapy',
-                        Cell: this.renderEditable
-                        }]}
-                        defaultPageSize={Object.keys(this.state.service[0]).length -1}
-                        pageSize={Object.keys(this.state.service[0]).length -1}
-                        className="-striped -highlight"
-                        showPageSizeOptions= {true}
-                        showPagination= {false}
-                    />
+                {
+                  this.state.service.length > 0 ? (
+                    <ReactTable
+                    data={Object.keys(this.state.service[0])}
+                    columns={[{
+                      Header: "Therapy PT Code",
+                      id: 'therapy',
+                      accessor: 'therapy',
+                      Cell: this.renderEditable
+                      }]}
+                      defaultPageSize={Object.keys(this.state.service[0]).length -1}
+                      pageSize={Object.keys(this.state.service[0]).length -1}
+                      className="-striped -highlight"
+                      showPageSizeOptions= {true}
+                      showPagination= {false}
+                  />
+                  ): (
+                    <div>No data!!!</div>
+                  )
+                }
                 </Col>
                 <Col sm="6">
                   <Button color="primary" onClick={() => this.addNew('therapy_code')}>Add Service</Button>

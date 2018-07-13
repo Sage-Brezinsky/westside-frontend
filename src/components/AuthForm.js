@@ -124,7 +124,7 @@ class AuthForm extends React.Component {
         <hr />
         <Button
           size="lg"
-          className="bg-gradient-theme-left border-0"
+          className="primary border-0"
           block
           onClick={this.handleSubmit}>
           {this.renderButtonText()}

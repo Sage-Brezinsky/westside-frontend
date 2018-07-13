@@ -40,12 +40,12 @@ class DashboardPage extends React.Component {
     this.state = {
       input: _.clone(props.input),
       data: [],
-      add_service: Object.keys(this.props.service[0])[1],
+      add_service: this.props.service.length > 0 ? Object.keys(this.props.service[0])[1] : null,
       add_select_visit_limit_applies: true,
       add_session_per_week: 1,
       add_length_of_session: 1
     }
-    this.state.input.insurance_provider = this.props.service[0].provider;
+    this.state.input.insurance_provider = this.props.service.length > 0 ? this.props.service[0].provider : null;
     this.handleInputChange = this.handleInputChange.bind(this)
     this.calculate = this.calculate.bind(this)
     this.renderEditable = this.renderEditable.bind(this);
@@ -200,20 +200,22 @@ class DashboardPage extends React.Component {
   }
 
   toggle = modalType => () => {
-
-    if (!modalType) {
-      return this.setState({
-        add_service: Object.keys(this.props.service[0])[1],
-        add_select_visit_limit_applies: true,
-        add_session_per_week: 1,
-        add_length_of_session: 1,
-        modal: !this.state.modal,
+    if ( this.props.service.length > 0)
+    {
+      if (!modalType) {
+        return this.setState({
+          add_service: Object.keys(this.props.service[0])[1],
+          add_select_visit_limit_applies: true,
+          add_session_per_week: 1,
+          add_length_of_session: 1,
+          modal: !this.state.modal,
+        });
+      }
+  
+      this.setState({
+        [`modal_${modalType}`]: !this.state[`modal_${modalType}`],
       });
     }
-
-    this.setState({
-      [`modal_${modalType}`]: !this.state[`modal_${modalType}`],
-    });
   };
 
   addService = modalType => () => {
@@ -605,10 +607,10 @@ class DashboardPage extends React.Component {
                   value={this.state.add_service}
                   onChange={(event) => {this.state.add_service = event.target.value; this.forceUpdate()}}>
                   {
-                    Object.keys(this.props.service[0]).map(key => {
+                    this.props.service.length > 0 ? Object.keys(this.props.service[0]).map(key => {
                     if (key !== 'provider')
                       return <option>{key}</option>
-                    })
+                    }) : null
                   }
                 </Input>
               </FormGroup>
