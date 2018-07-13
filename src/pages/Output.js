@@ -19,6 +19,8 @@ class OutputPage extends React.Component {
     super(props);
   }
   
+  componentWillMount() {
+  }
   genLineData = () => {
     const Label = [], Data = [];
     for (var i = 0; i < this.props.calculation.length; i ++)
@@ -41,6 +43,12 @@ class OutputPage extends React.Component {
     };
   };
   render() {
+    if (this.props.calculation == 'reactjs')
+    {
+      return (
+        <div style={{width: '100%', height: '100%', lineHeight: '100%', textAlign: 'center'}}>No Calculation Result!!!</div>
+      )
+    }
     return (
       <Page
         title="Typography"
@@ -57,7 +65,7 @@ class OutputPage extends React.Component {
         <ReactTable
           data={this.props.calculation}
           columns={[{
-            Header: "Therapy Week of Concept",
+            Header: "Week of Therapy",
             id: "therapy_week",
           accessor: d =>
             <div

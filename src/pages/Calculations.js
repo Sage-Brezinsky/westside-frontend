@@ -16,6 +16,12 @@ class CalculationsPage extends React.Component {
     console.log(props.calculation)
   }
   render() {
+    if (this.props.calculation == 'reactjs')
+    {
+      return (
+        <div style={{width: '100%', height: '100%', lineHeight: '100%', textAlign: 'center'}}>No Calculation Result!!!</div>
+      )
+    }
     return (
       <Page
         title="Typography"

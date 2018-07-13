@@ -3,7 +3,7 @@ import GAListener from 'components/GAListener';
 import { LayoutRoute, MainLayout } from 'components/Layout';
 
 import DashboardPage from 'pages/DashboardPage';
-import TypographyPage from 'pages/Output';
+import OutputPage from 'pages/Output';
 import React from 'react';
 import componentQueries from 'react-component-queries';
 import { BrowserRouter, Redirect, Switch } from 'react-router-dom';
@@ -38,7 +38,7 @@ class App extends React.Component {
               exact
               path="/output"
               layout={MainLayout}
-              component={TypographyPage}
+              component={OutputPage}
             />
             <LayoutRoute
               exact

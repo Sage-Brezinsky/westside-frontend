@@ -126,10 +126,10 @@ class SettingsPage extends React.Component {
   }
 
   addNew(index) {
-    if (index === 'reimbursement')
+    if (index === 'insurance_provider')
     {
       this.state.service.push({
-        provider: 'New Reimbursement'
+        provider: 'New Insurance Provider'
       });
     }
     else {
@@ -141,6 +141,10 @@ class SettingsPage extends React.Component {
     }
     this.generateServiceColumn()
     this.forceUpdate();
+  }
+
+  save() {
+    this.props.dispatch(setServiceResult(this.state.service))
   }
 
   generateServiceColumn() {
@@ -219,6 +223,10 @@ class SettingsPage extends React.Component {
                     showPagination= {false}
                   />
               </Col>
+              <Col sm="12" className="pull-right">
+                <Button style={{float:'right'}}>Cancel</Button>
+                <Button color="primary" onClick={() => this.save()} style={{float:'right', marginRight: '20px'}}>Save</Button>
+              </Col>
             </Row>
           </TabPane>
           <TabPane tabId="2">
@@ -239,7 +247,7 @@ class SettingsPage extends React.Component {
                   />
               </Col>
               <Col sm="6">
-                <Button onClick={() => this.addNew('reimbursement')}>Add Reimbursement</Button>
+                <Button color="primary" onClick={() => this.addNew('insurance_provider')}>Add Insurance Provider</Button>
               </Col>
             </Row>
           </TabPane>
@@ -262,7 +270,7 @@ class SettingsPage extends React.Component {
                     />
                 </Col>
                 <Col sm="6">
-                  <Button onClick={() => this.addNew('therapy_code')}>Add Therapy Code</Button>
+                  <Button color="primary" onClick={() => this.addNew('therapy_code')}>Add Service</Button>
                 </Col>
               </Row>
           </TabPane>
@@ -273,8 +281,6 @@ class SettingsPage extends React.Component {
 
   componentWillUnmount()
   {
-    console.log('unmount')
-    this.props.dispatch(setServiceResult(this.state.service))
   }
 }
 

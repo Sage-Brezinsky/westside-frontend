@@ -262,7 +262,8 @@ class DashboardPage extends React.Component {
                       id="family_deductible"
                       placeholder="Family Deductible"
                       min="0"
-                      value={this.state.input.family_deductible}
+                      step="0.01"
+                      value={parseFloat(this.state.input.family_deductible).toFixed(2)}
                       onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                       onChange={this.handleInputChange}
                     />
@@ -278,7 +279,8 @@ class DashboardPage extends React.Component {
                       id="amount_fam_met"
                       placeholder="Amount Fam Met"
                       min="0"
-                      value={this.state.input.amount_fam_met}
+                      step="0.01"
+                      value={parseFloat(this.state.input.amount_fam_met).toFixed(2)}
                       onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                       onChange={this.handleInputChange}
                     />
@@ -300,7 +302,8 @@ class DashboardPage extends React.Component {
                       id="individual_deductible"
                       placeholder="Individual Deductible"
                       min="0"
-                      value={this.state.input.individual_deductible}
+                      step="0.01"
+                      value={parseFloat(this.state.input.individual_deductible).toFixed(2)}
                       onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                       onChange={this.handleInputChange}
                     />
@@ -316,7 +319,8 @@ class DashboardPage extends React.Component {
                       id="amount_ind_met"
                       placeholder="Amount Ind Met"
                       min="0"
-                      value={this.state.input.amount_ind_met}
+                      step="0.01"
+                      value={parseFloat(this.state.input.amount_ind_met).toFixed(2)}
                       onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                       onChange={this.handleInputChange}
                     />
@@ -340,7 +344,8 @@ class DashboardPage extends React.Component {
                       id="oop_max_family"
                       placeholder="OOP Max Family"
                       min="0"
-                      value={this.state.input.oop_max_family}
+                      step="0.01"
+                      value={parseFloat(this.state.input.oop_max_family).toFixed(2)}
                       onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                       onChange={this.handleInputChange}
                     />
@@ -356,7 +361,8 @@ class DashboardPage extends React.Component {
                       id="amount_fam_opm_met"
                       placeholder="Amount Fam OPM Met"
                       min="0"
-                      value={this.state.input.amount_fam_opm_met}
+                      step="0.01"
+                      value={parseFloat(this.state.input.amount_fam_opm_met).toFixed(2)}
                       onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                       onChange={this.handleInputChange}
                     />
@@ -378,7 +384,8 @@ class DashboardPage extends React.Component {
                       id="oop_max_individual"
                       placeholder="OOP Max Individual"
                       min="0"
-                      value={this.state.input.oop_max_individual}
+                      step="0.01"
+                      value={parseFloat(this.state.input.oop_max_individual).toFixed(2)}
                       onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                       onChange={this.handleInputChange}
                     />
@@ -394,7 +401,8 @@ class DashboardPage extends React.Component {
                       id="amount_ind_opm_met"
                       placeholder="Amount Ind OPM Met"
                       min="0"
-                      value={this.state.input.amount_ind_opm_met}
+                      step="0.01"
+                      value={parseFloat(this.state.input.amount_ind_opm_met).toFixed(2)}
                       onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                       onChange={this.handleInputChange}
                     />
@@ -440,7 +448,7 @@ class DashboardPage extends React.Component {
                       id="coverage"
                       placeholder="Coverage Percentage"
                       min="0"
-                      value={this.state.input.coverage}
+                      value={parseFloat(this.state.input.coverage)}
                       onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                       onChange={this.handleInputChange}
                     />
@@ -464,7 +472,8 @@ class DashboardPage extends React.Component {
                       id="co_pay_amount"
                       placeholder="Co-Pay Amount"
                       min="0"
-                      value={this.state.input.co_pay_amount}
+                      step="0.01"
+                      value={parseFloat(this.state.input.co_pay_amount).toFixed(2)}
                       onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                       onChange={this.handleInputChange}
                     />
@@ -495,7 +504,7 @@ class DashboardPage extends React.Component {
                       id="max_visit"
                       placeholder="Max # of Visits"
                       min="0"
-                      value={this.state.input.max_visits}
+                      value={parseFloat(this.state.input.max_visits)}
                       onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                       onChange={this.handleInputChange}
                     />
@@ -583,7 +592,7 @@ class DashboardPage extends React.Component {
           </Card>
         </Col>
         <Col xl={2} lg={2} md={2} style={{display: 'grid'}}>
-        <Button onClick={this.toggle()}>Add Service</Button>
+        <Button color="primary" onClick={this.toggle()}>Add Service</Button>
           <Modal
             isOpen={this.state.modal}
             toggle={this.toggle()}
@@ -620,20 +629,22 @@ class DashboardPage extends React.Component {
                   id="max_visit"
                   placeholder="Session Per week"
                   min="0"
-                  value={this.state.add_session_per_week}
+                  step="0.01"
+                  value={parseFloat(this.state.add_session_per_week).toFixed(2)}
                   onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                   onChange={(event) => {this.state.add_session_per_week = event.target.value; this.forceUpdate()}}
                 />
               </FormGroup>
               <FormGroup>
-                <Label for="add_length_of_session">Length of Session</Label>
+                <Label for="add_length_of_session">Length of Session(Hrs)</Label>
                 <Input
                   type="number"
                   name="add_length_of_session"
                   id="max_visit"
                   placeholder="Length of Session"
                   min="0"
-                  value={this.state.add_length_of_session}
+                  step="0.01"
+                  value={parseFloat(this.state.add_length_of_session).toFixed(2)}
                   onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                   onChange={(event) => {this.state.add_length_of_session = event.target.value; this.forceUpdate()}}
                 />
@@ -696,23 +707,27 @@ class DashboardPage extends React.Component {
             <CardBody>
               <FormGroup>
                   <Label for="max_visit">Assumed Cancel Rate</Label>
+                  <InputGroup>
                     <Input
                       type="number"
                       name="number"
                       id="assumed_cancel_rate"
                       placeholder="Assumed Cancel Rate"
                       min="0"
-                      value={this.state.input.assumed_cancel_rate}
+                      step="0.01"
+                      value={parseFloat(this.state.input.assumed_cancel_rate)}
                       onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                       onChange={this.handleInputChange}
                     />
+                    <InputGroupAddon addonType="append">%</InputGroupAddon>
+                  </InputGroup>
                 </FormGroup>
             </CardBody>
           </Card>
         </Col>
       </Row>
         <Col sm={{ size: 12, offset: 5 }}>
-          <Button onClick={() => this.calculate()}>Calculate</Button>
+          <Button color="primary" onClick={() => this.calculate()}>Calculate</Button>
         </Col>
     </Page>
     );
