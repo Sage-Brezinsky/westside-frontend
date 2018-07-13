@@ -631,8 +631,7 @@ class DashboardPage extends React.Component {
                   id="max_visit"
                   placeholder="Session Per week"
                   min="0"
-                  step="0.01"
-                  value={parseFloat(this.state.add_session_per_week).toFixed(2)}
+                  value={this.state.add_session_per_week}
                   onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                   onChange={(event) => {this.state.add_session_per_week = event.target.value; this.forceUpdate()}}
                 />
@@ -645,8 +644,7 @@ class DashboardPage extends React.Component {
                   id="max_visit"
                   placeholder="Length of Session"
                   min="0"
-                  step="0.01"
-                  value={parseFloat(this.state.add_length_of_session).toFixed(2)}
+                  value={this.state.add_length_of_session}
                   onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                   onChange={(event) => {this.state.add_length_of_session = event.target.value; this.forceUpdate()}}
                 />
