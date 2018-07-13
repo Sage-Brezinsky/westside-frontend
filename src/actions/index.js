@@ -11,6 +11,7 @@ export const EDITOR_PAGE_UNLOADED = 'EDITOR_PAGE_UNLOADED';
 export const UPDATE_FIELD_AUTH = 'UPDATE_FIELD_AUTH';
 export const APP_LOAD='APP_LOAD';
 export const SERVICE_RESULT='SERVICE_RESULT';
+export const SERVICE_REGISTER='SERVICE_REGISTER';
 
 export const setCalculationResult = calculation => ({
   type: CALCULATION_RESULT,
