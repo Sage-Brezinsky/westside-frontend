@@ -21,7 +21,9 @@ import ReactTable from "react-table";
 import "react-table/react-table.css";
 import { rename } from 'fs';
 import { setServiceResult } from '../actions';
-
+import {
+  UPDATE_FIELD_AUTH
+} from '../actions';
 class SettingsPage extends React.Component {
   constructor(props) {
     super(props);
@@ -144,7 +146,8 @@ class SettingsPage extends React.Component {
   }
 
   save() {
-    this.props.dispatch(setServiceResult(this.state.service))
+    this.props.dispatch(setServiceResult(this.state.service));
+    this.props.onChangeService(this.state.service);
   }
 
   generateServiceColumn() {
@@ -292,5 +295,8 @@ const mapStateToProps = state => {
     auth
   }
 }
-
-export default connect(mapStateToProps)(SettingsPage);
+const mapDispatchToProps = dispatch => ({
+  onChangeService: value =>
+    dispatch({ type: UPDATE_FIELD_AUTH, key: 'service', value }),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(SettingsPage);
