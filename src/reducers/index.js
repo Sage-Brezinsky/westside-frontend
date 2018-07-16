@@ -23,7 +23,7 @@ const calculation = (state = 'reactjs', action) => {
 const service = (state = '', action) => {
   switch (action.type) {
     case SERVICE_RESULT:
-      return action.payload;
+      return action.service;
     default:
       return state
   }

@@ -176,8 +176,8 @@ class SettingsPage extends React.Component {
   }
 
   componentWillMount() {
-    // if(!this.props.auth.token)
-      // this.props.history.push('/');
+    if(!this.props.auth.token)
+      this.props.history.push('/');
   }
 
   componentDidMount() {

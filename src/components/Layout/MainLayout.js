@@ -124,7 +124,7 @@ const mapDispatchToProps = dispatch => ({
   onLoad: (payload, token) =>
     dispatch({ type: APP_LOAD, payload, token, skipTracking: true }),
   onLoadService: (payload) => 
-    dispatch({type: SERVICE_RESULT, payload})
+    dispatch({type: SERVICE_RESULT, service: payload})
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainLayout);
