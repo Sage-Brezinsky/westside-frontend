@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 import {
-  CALCULATION_RESULT, SERVICE_RESULT, SERVICE_REGISTER
+  CALCULATION_RESULT, SERVICE_RESULT
 } from '../actions'
 import auth from './auth';
 const input = (state = 'reactjs', action) => {
@@ -23,8 +23,6 @@ const calculation = (state = 'reactjs', action) => {
 const service = (state = '', action) => {
   switch (action.type) {
     case SERVICE_RESULT:
-      return action.service;
-    case SERVICE_REGISTER:
       return action.payload;
     default:
       return state

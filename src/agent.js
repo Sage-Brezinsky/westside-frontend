@@ -3,7 +3,7 @@ import _superagent from 'superagent';
 
 const superagent = superagentPromise(_superagent, global.Promise);
 
-const API_ROOT = 'http://18.191.177.12:3001/api';
+const API_ROOT = 'http://localhost:3001/api';
 
 const encode = encodeURIComponent;
 const responseBody = res => res.body;
@@ -37,8 +37,15 @@ const Auth = {
     requests.put('/user', { user })
 };
 
+const Service = {
+  current: () =>
+    requests.get('/tags'),
+  save: (service) =>
+    requests.post('/tags', service)
+}
 
 export default {
   Auth,
+  Service,
   setToken: _token => { token = _token; }
 };

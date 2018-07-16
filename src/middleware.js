@@ -5,7 +5,6 @@ import {
   LOGIN,
   LOGOUT,
   REGISTER,
-  SERVICE_RESULT
 } from './actions';
 
 const promiseMiddleware = store => next => action => {
@@ -53,12 +52,7 @@ const localStorageMiddleware = store => next => action => {
       window.localStorage.setItem('jwt', action.payload.user.token);
       agent.setToken(action.payload.user.token);
       console.log(action.payload.user.service)
-      store.dispatch(
-        {
-          type: SERVICE_RESULT,
-          service: action.payload.user.service
-        }
-  );
+
     }
   } else if (action.type === LOGOUT) {
     window.localStorage.setItem('jwt', '');

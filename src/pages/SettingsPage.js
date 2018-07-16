@@ -145,7 +145,7 @@ class SettingsPage extends React.Component {
   }
 
   save() {
-    agent.Auth.save({service: this.state.service});
+    agent.Service.save(this.state.service);
     this.props.dispatch(setServiceResult(this.state.service))
   }
 

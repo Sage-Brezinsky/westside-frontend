@@ -8,7 +8,7 @@ import {
 } from 'react-icons/lib/md';
 import NotificationSystem from 'react-notification-system';
 import { NOTIFICATION_SYSTEM_STYLE } from 'utils/constants';
-import {APP_LOAD, SERVICE_REGISTER} from '../../actions';
+import {APP_LOAD, SERVICE_RESULT} from '../../actions';
 import agent from '../../agent';
 
 class MainLayout extends React.Component {
@@ -29,10 +29,9 @@ class MainLayout extends React.Component {
     if (token) {
       agent.setToken(token);
     }
-    agent.Auth.current().then((res) => {
-      console.log(res)
-      this.props.onLoadService(res.user.service);
-    });
+    agent.Service.current().then((res, err) => {
+      this.props.onLoadService(res.service);
+    })
     this.props.onLoad(token ? agent.Auth.current() : null, token);
   }
 
@@ -125,7 +124,7 @@ const mapDispatchToProps = dispatch => ({
   onLoad: (payload, token) =>
     dispatch({ type: APP_LOAD, payload, token, skipTracking: true }),
   onLoadService: (payload) => 
-    dispatch({type: SERVICE_REGISTER, payload})
+    dispatch({type: SERVICE_RESULT, payload})
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainLayout);
