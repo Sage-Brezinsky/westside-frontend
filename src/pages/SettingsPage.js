@@ -250,7 +250,7 @@ class SettingsPage extends React.Component {
                     <ReactTable
                         data={this.state.service}
                         columns={[{
-                          Header: "Services",
+                          Header: "Insurance Provider",
                           id: 'service',
                           Cell: this.renderEditable
                           }]}
@@ -278,7 +278,7 @@ class SettingsPage extends React.Component {
                     <ReactTable
                     data={Object.keys(this.state.service[0])}
                     columns={[{
-                      Header: "Therapy PT Code",
+                      Header: "Services",
                       id: 'therapy',
                       accessor: 'therapy',
                       Cell: this.renderEditable
