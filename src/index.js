@@ -82,16 +82,6 @@ const initialState = {
     assumed_cancel_rate: 15
   },
   service: [
-    {
-      provider: 'Aetna',
-      PT: 0,
-      OT: 1
-    },
-    {
-      provider: 'Blue Cross Blue Shield',
-      PT: 0,
-      OT: 1
-    }
   ]
 }
 

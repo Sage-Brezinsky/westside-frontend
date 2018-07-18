@@ -736,10 +736,9 @@ class DashboardPage extends React.Component {
 
 const mapStateToProps = state => {
   const { input, service } = state
-
   return {
     input,
-    service
+    service: service.service
   }
 }
 

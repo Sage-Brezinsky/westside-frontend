@@ -30,9 +30,9 @@ class MainLayout extends React.Component {
       agent.setToken(token);
     }
     agent.Service.current().then((res, err) => {
-      this.props.onLoadService(res.service);
+      this.props.onLoadService(res);
+      this.props.onLoad(token ? agent.Auth.current() : null, token);
     })
-    this.props.onLoad(token ? agent.Auth.current() : null, token);
   }
 
 
