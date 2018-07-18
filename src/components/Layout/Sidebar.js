@@ -39,7 +39,7 @@ class Sidebar extends React.Component {
   {
     console.log(this.props.auth.token)
     if (this.props.auth.token)
-      navItems.push(  { to: '/settings', name: 'Setting', exact: true, Icon: MdSettings })
+      navItems.push(  { to: '/settings', name: 'Settings', exact: true, Icon: MdSettings })
   }
   handleClick = name => () => {
     this.setState(prevState => {

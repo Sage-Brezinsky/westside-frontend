@@ -439,12 +439,12 @@ class SettingsPage extends React.Component {
                 </Col>
                 <Col sm="6">
                   <Col sm="12" style={{marginBottom: '50px'}}>
-                    <Col sm="3" style={{display: 'inline-block'}}>
+                    <Col sm="6" style={{display: 'inline-block'}}>
                       <div style={{display: 'grid'}}>
                        <Button color="primary" onClick={() => this.addNew('therapy_code')}>Add Service</Button>
                       </div>
                     </Col>
-                    <Col sm="9" style={{display: 'inline-block'}}>
+                    <Col sm="6" style={{display: 'inline-block'}}>
                       <div style={{display: 'grid'}}>
                         <Input
                           value={this.state.add_service}
@@ -454,12 +454,12 @@ class SettingsPage extends React.Component {
                     </Col>
                   </Col>
                   <Col sm="12" style={{marginBottom: '50px'}}>
-                    <Col sm="3" style={{display: 'inline-block'}}>
+                    <Col sm="6" style={{display: 'inline-block'}}>
                       <div style={{display: 'grid'}}>
                        <Button color="primary" onClick={() => this.removeService()}>Remove Service</Button>
                       </div>
                     </Col>
-                    <Col sm="9" style={{display: 'inline-block'}}>
+                    <Col sm="6" style={{display: 'inline-block'}}>
                       <div style={{display: 'grid'}}>
                         <Select
                         name="form-field-name"
