@@ -7,7 +7,13 @@ import {
   Input
 } from 'reactstrap';
 import { connect } from 'react-redux';
-import { TabContent, TabPane, Nav, NavItem, NavLink, Button, CardTitle, CardText } from 'reactstrap';
+import { TabContent, TabPane, Nav, NavItem, NavLink, Button,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  FormGroup,
+  Label } from 'reactstrap';
 import classnames from 'classnames';
 
 import Page from 'components/Page';
@@ -43,19 +49,44 @@ class SettingsPage extends React.Component {
       service_initial: [],
       service_value: '',
       insurance_provider_value: '',
-      add_insurance_provider: ''
+      add_insurance_provider: '',
+      editModalShow: false,
+      service_to_change: '',
+      service_change_value: ''
     };
     this.renderEditable = this.renderEditable.bind(this);
     this.handleServiceSelectChange = this.handleServiceSelectChange.bind(this);
     this.handleInsuranceProviderSelectChange = this.handleInsuranceProviderSelectChange.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
   }
 
-  renameKeys(obj, newKeys) {
-    const keyValues = Object.keys(obj).map(key => {
-      const newKey = newKeys[key] || key;
-      return { [newKey]: obj[key] };
-    });
-    return Object.assign({}, ...keyValues);
+  renameKeys() {
+    let newObj = {}, flag = false;
+
+      Object.keys(this.state.service[0]).map(key => {
+        if (key == this.state.service_change_value)
+          flag = true;
+      })
+    if (flag)
+    {
+      alert('Service code is duplicated!!!');
+      return;
+    }
+    this.state.service.map((el, index) => {
+      Object.keys(el).map((key) => {
+        if (key == this.state.service_to_change)
+        {
+          newObj[this.state.service_change_value] = el[key];
+        }
+        else
+        {
+          newObj[key] = el[key];
+        }
+      });
+      this.state.service[index] = newObj;
+    })
+    this.forceUpdate();
+    this.setState({editModalShow: false})
   }
   
   handleServiceSelectChange(value) {
@@ -92,20 +123,8 @@ class SettingsPage extends React.Component {
           style={{ backgroundColor: "#fafafa" }}
           contentEditable
           suppressContentEditableWarning
-          onBlur={e => {
-            this.state.service.length > 0 & this.state.service.map((el,key) => {
-              const newKeys = {
-                [Object.keys(el)[cellInfo.index+1 ]]: e.target.innerHTML
-              }
-              const renamedObj = this.renameKeys(el, newKeys);
-              this.state.service[key] = renamedObj
-            })
-            this.forceUpdate()
-            this.generateServiceColumn();
-            this.setSelectValue();
-          }}
           dangerouslySetInnerHTML={{
-            __html: this.state.service_code[cellInfo.index ]
+            __html: Object.keys(this.state.service[0])[cellInfo.index]
           }}
         />
       );
@@ -147,7 +166,6 @@ class SettingsPage extends React.Component {
     });
     this.state.service = removedService;
     _.pullAll(this.state.service_code, services);
-    console.log(this.state.service_code)
     this.forceUpdate();
     this.generateServiceColumn();
     this.setSelectValue();
@@ -162,9 +180,15 @@ class SettingsPage extends React.Component {
       return insurance_provider.indexOf(el.provider) < 0
     })
     this.state.service = removedInsuranceProvider;
-    console.log(removedInsuranceProvider)
     this.forceUpdate();
     this.setSelectValue();
+  }
+
+  toggleModal()
+  {
+    this.setState({
+      editModalShow: !this.state.editModalShow
+    });
   }
 
   toggle(tab) {
@@ -236,7 +260,7 @@ class SettingsPage extends React.Component {
 
   save() {
     agent.Service.save(this.state.service, this.state.service_code);
-    this.props.dispatch(setServiceResult({service: this.state.service, therapy_code: this.state.service_code}))
+    this.props.dispatch(setServiceResult({service: this.state.service}))
   }
 
   generateServiceColumn() {
@@ -244,7 +268,6 @@ class SettingsPage extends React.Component {
 
     if (this.state.service && this.state.service.length > 0)
     {
-      console.log(this.state.service)
       Object.keys(this.state.service[0]).map(key => {
         if (key != 'provider')
           serviceColumn.push({
@@ -261,7 +284,6 @@ class SettingsPage extends React.Component {
       })
       this.setState({serviceColumn});
     }
-    console.log(serviceColumn)
   }
   
   setSelectValue() {
@@ -471,6 +493,40 @@ class SettingsPage extends React.Component {
                       </div>    
                     </Col>
                   </Col>
+                  <Col sm="12">
+                    <Col sm="6">
+                    <Button color="primary" onClick={this.toggleModal}>Rename Service</Button>
+                      <Modal
+                        isOpen={this.state.editModalShow}
+                        toggle={this.toggleModal}
+                        >
+                        <ModalHeader toggle={this.toggleModal}>Modal title</ModalHeader>
+                        <ModalBody>
+                          <FormGroup>
+                            <Label for="add_session_per_week">Session Per Week</Label>
+                            <Input
+                              onChange={(event) => {this.setState({service_to_change :event.target.value})}}
+                            />
+                          </FormGroup>
+                          <FormGroup>
+                            <Label for="add_length_of_session">Length of Session(Hrs)</Label>
+                            <Input
+                              onChange={(event) => {this.setState({service_change_value :event.target.value})}}
+                            />
+                          </FormGroup>
+
+                        </ModalBody>
+                        <ModalFooter>
+                          <Button color="primary" onClick={() => this.renameKeys()}>
+                            Confirm
+                          </Button>{' '}
+                          <Button color="secondary" onClick={() => this.setState({editModalShow: false})}>
+                            Cancel
+                          </Button>
+                        </ModalFooter>
+                      </Modal>
+                    </Col>
+                    </Col>
                 </Col>
               </Row>
           </TabPane>
