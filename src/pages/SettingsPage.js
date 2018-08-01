@@ -86,7 +86,11 @@ class SettingsPage extends React.Component {
       this.state.service[index] = newObj;
     })
     this.forceUpdate();
+    console.log(this.state.service)
     this.setState({editModalShow: false})
+    this.generateServiceColumn();
+    this.setSelectValue();
+
   }
   
   handleServiceSelectChange(value) {
@@ -121,20 +125,9 @@ class SettingsPage extends React.Component {
       return (
         <div
           style={{ backgroundColor: "#fafafa" }}
-          contentEditable
           suppressContentEditableWarning
           dangerouslySetInnerHTML={{
             __html: Object.keys(this.state.service[0])[cellInfo.index]
-          }}
-        />
-      );
-    }
-    else if (cellInfo.column.Header === 'Insurance Provider') {
-      return (
-        <div
-          style={{ backgroundColor: "#fafafa" }}
-          dangerouslySetInnerHTML={{
-            __html: this.state.service[cellInfo.index].provider
           }}
         />
       );
@@ -503,13 +496,13 @@ class SettingsPage extends React.Component {
                         <ModalHeader toggle={this.toggleModal}>Modal title</ModalHeader>
                         <ModalBody>
                           <FormGroup>
-                            <Label for="add_session_per_week">Session Per Week</Label>
+                            <Label for="add_session_per_week">Service name ( Old )</Label>
                             <Input
                               onChange={(event) => {this.setState({service_to_change :event.target.value})}}
                             />
                           </FormGroup>
                           <FormGroup>
-                            <Label for="add_length_of_session">Length of Session(Hrs)</Label>
+                            <Label for="add_length_of_session">Service name ( New )</Label>
                             <Input
                               onChange={(event) => {this.setState({service_change_value :event.target.value})}}
                             />
