@@ -108,9 +108,9 @@ class SettingsPage extends React.Component {
     {
       return (
           <div
-            style={{ backgroundColor: "#fafafa", display: 'inline-block' }}
-            contentEditable
+            style={{ backgroundColor: "#fafafa" }}
             suppressContentEditableWarning
+            contentEditable
             onBlur={e => {
               this.state.service[cellInfo.index].provider = e.target.innerHTML;
               this.forceUpdate()
@@ -378,18 +378,13 @@ class SettingsPage extends React.Component {
                           id: 'service',
                           Cell: this.renderEditable
                           }, {
-                            Header: 'Edit',
-                            accessor: 'edit',
-                            width: 65,
-                            Cell: row => (
-                              <FaPencil />
-                            )
-                          }, {
                             Header: 'Remove',
                             accessor: 'remove',
                             width: 80,
                             Cell: row => (
-                              <FaTrash />
+                              <div style={{marginLeft: 'auto', marginRight: 'auto'}}>
+                                <FaTrash />
+                              </div>
                             )
                           }]}
                           defaultPageSize={this.state.service.length}

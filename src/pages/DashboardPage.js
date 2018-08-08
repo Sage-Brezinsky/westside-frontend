@@ -295,8 +295,8 @@ class DashboardPage extends React.Component {
                         id="family_deductible"
                         placeholder="Family Deductible"
                         min="0"
-                        step="0.01"
-                        value={parseFloat(this.state.input.family_deductible).toFixed(2)}
+                        step="1"
+                        value={this.state.input.family_deductible}
                         onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                         onChange={this.handleInputChange}
                       />
@@ -313,7 +313,7 @@ class DashboardPage extends React.Component {
                         placeholder="Amount Fam Met"
                         min="0"
                         step="0.01"
-                        value={parseFloat(this.state.input.amount_fam_met).toFixed(2)}
+                        value={this.state.input.amount_fam_met}
                         onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                         onChange={this.handleInputChange}
                       />
@@ -336,7 +336,7 @@ class DashboardPage extends React.Component {
                         placeholder="Individual Deductible"
                         min="0"
                         step="0.01"
-                        value={parseFloat(this.state.input.individual_deductible).toFixed(2)}
+                        value={this.state.input.individual_deductible}
                         onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                         onChange={this.handleInputChange}
                       />
@@ -353,7 +353,7 @@ class DashboardPage extends React.Component {
                         placeholder="Amount Ind Met"
                         min="0"
                         step="0.01"
-                        value={parseFloat(this.state.input.amount_ind_met).toFixed(2)}
+                        value={this.state.input.amount_ind_met}
                         onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                         onChange={this.handleInputChange}
                       />
@@ -378,7 +378,7 @@ class DashboardPage extends React.Component {
                         placeholder="OOP Max Family"
                         min="0"
                         step="0.01"
-                        value={parseFloat(this.state.input.oop_max_family).toFixed(2)}
+                        value={this.state.input.oop_max_family}
                         onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                         onChange={this.handleInputChange}
                       />
@@ -395,7 +395,7 @@ class DashboardPage extends React.Component {
                         placeholder="Amount Fam OPM Met"
                         min="0"
                         step="0.01"
-                        value={parseFloat(this.state.input.amount_fam_opm_met).toFixed(2)}
+                        value={this.state.input.amount_fam_opm_met}
                         onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                         onChange={this.handleInputChange}
                       />
@@ -418,7 +418,7 @@ class DashboardPage extends React.Component {
                         placeholder="OOP Max Individual"
                         min="0"
                         step="0.01"
-                        value={parseFloat(this.state.input.oop_max_individual).toFixed(2)}
+                        value={this.state.input.oop_max_individual}
                         onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                         onChange={this.handleInputChange}
                       />
@@ -435,7 +435,7 @@ class DashboardPage extends React.Component {
                         placeholder="Amount Ind OPM Met"
                         min="0"
                         step="0.01"
-                        value={parseFloat(this.state.input.amount_ind_opm_met).toFixed(2)}
+                        value={this.state.input.amount_ind_opm_met}
                         onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                         onChange={this.handleInputChange}
                       />
@@ -481,7 +481,7 @@ class DashboardPage extends React.Component {
                         id="coverage"
                         placeholder="Coverage Percentage"
                         min="0"
-                        value={parseFloat(this.state.input.coverage)}
+                        value={this.state.input.coverage}
                         onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                         onChange={this.handleInputChange}
                       />
@@ -506,7 +506,7 @@ class DashboardPage extends React.Component {
                         placeholder="Co-Pay Amount"
                         min="0"
                         step="0.01"
-                        value={parseFloat(this.state.input.co_pay_amount).toFixed(2)}
+                        value={this.state.input.co_pay_amount}
                         onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                         onChange={this.handleInputChange}
                       />
@@ -537,7 +537,7 @@ class DashboardPage extends React.Component {
                         id="max_visit"
                         placeholder="Max # of Visits"
                         min="0"
-                        value={parseFloat(this.state.input.max_visits)}
+                        value={this.state.input.max_visits}
                         onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                         onChange={this.handleInputChange}
                       />
@@ -746,7 +746,7 @@ class DashboardPage extends React.Component {
                         placeholder="Assumed Cancel Rate"
                         min="0"
                         step="0.01"
-                        value={parseFloat(this.state.input.assumed_cancel_rate)}
+                        value={this.state.input.assumed_cancel_rate}
                         onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                         onChange={this.handleInputChange}
                       />
@@ -776,7 +776,7 @@ class DashboardPage extends React.Component {
                       placeholder="Family Deductible"
                       min="0"
                       step="0.01"
-                      value={parseFloat(this.state.input.family_deductible).toFixed(2)}
+                      value={this.state.input.family_deductible}
                       onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                       onChange={this.handleInputChange}
                     />
@@ -793,7 +793,7 @@ class DashboardPage extends React.Component {
                       placeholder="Amount Fam Met"
                       min="0"
                       step="0.01"
-                      value={parseFloat(this.state.input.amount_fam_met).toFixed(2)}
+                      value={this.state.input.amount_fam_met}
                       onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                       onChange={this.handleInputChange}
                     />
@@ -816,7 +816,7 @@ class DashboardPage extends React.Component {
                       placeholder="Individual Deductible"
                       min="0"
                       step="0.01"
-                      value={parseFloat(this.state.input.individual_deductible).toFixed(2)}
+                      value={this.state.input.individual_deductible}
                       onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
                       onChange={this.handleInputChange}
                     />
