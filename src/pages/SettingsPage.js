@@ -33,6 +33,8 @@ import {
   // MdCardGiftcard,
   MdLoyalty,
 } from 'react-icons/lib/md';
+import { FaPencil, FaTrash } from "react-icons/lib/fa";
+
 class SettingsPage extends React.Component {
   constructor(props) {
     super(props);
@@ -102,22 +104,21 @@ class SettingsPage extends React.Component {
   }
 
   renderEditable(cellInfo) {
-    if (
-      cellInfo.column.Header === 'Insurance Provider')
+    if (cellInfo.column.Header === 'Insurance Provider')
     {
       return (
-        <div
-          style={{ backgroundColor: "#fafafa" }}
-          contentEditable
-          suppressContentEditableWarning
-          onBlur={e => {
-            this.state.service[cellInfo.index].provider = e.target.innerHTML;
-            this.forceUpdate()
-          }}
-          dangerouslySetInnerHTML={{
-            __html: this.state.service[cellInfo.index].provider
-          }}
-        />
+          <div
+            style={{ backgroundColor: "#fafafa", display: 'inline-block' }}
+            contentEditable
+            suppressContentEditableWarning
+            onBlur={e => {
+              this.state.service[cellInfo.index].provider = e.target.innerHTML;
+              this.forceUpdate()
+            }}
+            dangerouslySetInnerHTML={{
+              __html: this.state.service[cellInfo.index].provider
+            }}
+          />
       );
     }
     else if (cellInfo.column.Header === 'Services')
@@ -127,7 +128,7 @@ class SettingsPage extends React.Component {
           style={{ backgroundColor: "#fafafa" }}
           suppressContentEditableWarning
           dangerouslySetInnerHTML={{
-            __html: Object.keys(this.state.service[0])[cellInfo.index]
+            __html: this.state.service_code[cellInfo.index]
           }}
         />
       );
@@ -241,9 +242,7 @@ class SettingsPage extends React.Component {
       else
       {
         this.state.service_code.push(this.state.add_service)
-        this.state.service.map(e => {
-            e[this.state.add_service] = 0
-        })
+        this.state.service.map(e => e[this.state.add_service] = 0);
       }
     }
     this.setSelectValue();
@@ -261,19 +260,18 @@ class SettingsPage extends React.Component {
 
     if (this.state.service && this.state.service.length > 0)
     {
-      Object.keys(this.state.service[0]).map(key => {
-        if (key != 'provider')
+      serviceColumn.push({
+        Header: 'provider',
+        id: 'provider',
+        Cell: this.renderEditable
+        });      
+
+      this.state.service_code.map(key => {
           serviceColumn.push({
             Header: key,
             id: key,
             Cell: this.renderEditable
             });    
-        else
-          serviceColumn.unshift({
-            Header: key,
-            id: key,
-            Cell: this.renderEditable
-            });      
       })
       this.setState({serviceColumn});
     }
@@ -379,6 +377,20 @@ class SettingsPage extends React.Component {
                           Header: "Insurance Provider",
                           id: 'service',
                           Cell: this.renderEditable
+                          }, {
+                            Header: 'Edit',
+                            accessor: 'edit',
+                            width: 65,
+                            Cell: row => (
+                              <FaPencil />
+                            )
+                          }, {
+                            Header: 'Remove',
+                            accessor: 'remove',
+                            width: 80,
+                            Cell: row => (
+                              <FaTrash />
+                            )
                           }]}
                           defaultPageSize={this.state.service.length}
                           pageSize={this.state.service.length}
