@@ -17,7 +17,7 @@ import {
   ModalBody,
   ModalFooter,
   ModalHeader,
-  TabContent, TabPane, Nav, NavItem, NavLink
+  Nav, NavItem, NavLink
 } from 'reactstrap';
 import classnames from 'classnames';
 
@@ -34,6 +34,10 @@ import {setCalculationResult} from '../actions';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
+import {Tabs, TabList, Tab, PanelList, Panel, ExtraButton} from 'react-tabtab';
+import Plus from 'react-icons/lib/fa/plus';
+import * as customStyle from 'react-tabtab/lib/themes/material-design';
+import TabComponent from '../components/TabComponent';
 class DashboardPage extends React.Component {
 
   constructor (props)
@@ -42,17 +46,21 @@ class DashboardPage extends React.Component {
     this.state = {
       input: _.clone(props.input),
       data: [],
-      add_service: this.props.service.length > 0 ? Object.keys(this.props.service[0])[1] : null,
       add_select_visit_limit_applies: true,
       add_session_per_week: 1,
       add_length_of_session: 1,
-      activeTab: 1
+      activeTab: 0,
+      tabLength: 1,
+      tabs: [{title: 'Primary', content: 'New Content'}, {title: 'Secondary', content: ''}]
     }
     this.state.input.insurance_provider = this.props.service.length > 0 ? this.props.service[0].provider : null;
     this.handleInputChange = this.handleInputChange.bind(this)
     this.calculate = this.calculate.bind(this)
     this.renderEditable = this.renderEditable.bind(this);
     this.toggle = this.toggle.bind(this);
+    this.handleTabChange = this.handleTabChange.bind(this);
+    this.handleExtraButton = this.handleExtraButton.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
   }
 
   componentDidMount() {
@@ -210,12 +218,25 @@ class DashboardPage extends React.Component {
       });
     }
   }
+  handleExtraButton() {
+    this.setState({tabLength: 2});
+  }
+
+  handleTabChange(index) {
+    this.setState({activeIndex: index});
+  }
+
+  handleEdit({type, index}) {
+    this.setState({tabLength: 1});
+  }
+
   toggle = modalType => () => {
     if ( this.props.service.length > 0)
     {
       if (!modalType) {
         return this.setState({
-          add_service: Object.keys(this.props.service[0])[1],
+          add_service: Object.keys(this.props.service[0])[0] != 'provider' ? Object.keys(this.props.service[0])[0] : 
+          Object.keys(this.props.service[0]).length > 1 ? Object.keys(this.props.service[0])[1] : null,
           add_select_visit_limit_applies: true,
           add_session_per_week: 1,
           add_length_of_session: 1,
@@ -237,6 +258,7 @@ class DashboardPage extends React.Component {
           cost = service[this.state.add_service] * this.state.add_session_per_week * this.state.add_length_of_session ;
       }
     })
+    console.log('addservice', this.state.add_service)
     this.state.data.push({
       service: this.state.add_service,
       requesting: true,
@@ -260,988 +282,41 @@ class DashboardPage extends React.Component {
   }
 
   render() {
+    const {tabs, activeIndex} = this.state;
+    const tabTemplate = [];
+    const panelTemplate = [];
+    console.log(tabs)
+    tabs.forEach((tab, i) => {
+      if (i < this.state.tabLength)
+      {
+        const closable = tabs.length > 1;
+        tabTemplate.push(<Tab key={i} closable={closable}>{tab.title}</Tab>);
+        panelTemplate.push(<Panel key={i}>{tab.content}</Panel>);
+      }
+    })
     return (
-    <Page title="Forms" breadcrumbs={[{ name: 'Forms', active: true }]}>
-      <Nav tabs>
-        <NavItem>
-          <NavLink
-            className={classnames({ active: this.state.activeTab === '1' })}
-            onClick={() => { this.toggleTab('1'); }}
-          >
-            Primary
-          </NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink
-            className={classnames({ active: this.state.activeTab === '2' })}
-            onClick={() => { this.toggleTab('2'); }}
-          >
-          Secondary
-          </NavLink>
-        </NavItem>
-      </Nav>
-      <TabContent activeTab={this.state.activeTab}>
-        <TabPane tabId="1">
-          <Row>
-          <Col xl={6} lg={12} md={12}>
-            <Card>
-              <CardBody>
-                  <FormGroup>
-                    <Label for="family_deductible">Family Deductible</Label>
-                    <InputGroup>
-                      <Input
-                        type="number"
-                        name="number"
-                        id="family_deductible"
-                        placeholder="Family Deductible"
-                        min="0"
-                        step="1"
-                        value={this.state.input.family_deductible}
-                        onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                        onChange={this.handleInputChange}
-                      />
-                      <InputGroupAddon addonType="append">$</InputGroupAddon>
-                    </InputGroup>
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="amount_fam_met">Amount Fam Met</Label>
-                    <InputGroup>
-                      <Input
-                        type="number"
-                        name="number"
-                        id="amount_fam_met"
-                        placeholder="Amount Fam Met"
-                        min="0"
-                        step="0.01"
-                        value={this.state.input.amount_fam_met}
-                        onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                        onChange={this.handleInputChange}
-                      />
-                      <InputGroupAddon addonType="append">$</InputGroupAddon>
-                    </InputGroup>
-                  </FormGroup>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col xl={6} lg={12} md={12}>
-            <Card>
-              <CardBody>
-                  <FormGroup>
-                    <Label for="individual_deductible">Individual Deductible</Label>
-                    <InputGroup>
-                      <Input
-                        type="number"
-                        name="number"
-                        id="individual_deductible"
-                        placeholder="Individual Deductible"
-                        min="0"
-                        step="0.01"
-                        value={this.state.input.individual_deductible}
-                        onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                        onChange={this.handleInputChange}
-                      />
-                      <InputGroupAddon addonType="append">$</InputGroupAddon>
-                    </InputGroup>
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="amount_ind_met">Amount Ind Met</Label>
-                    <InputGroup>
-                      <Input
-                        type="number"
-                        name="number"
-                        id="amount_ind_met"
-                        placeholder="Amount Ind Met"
-                        min="0"
-                        step="0.01"
-                        value={this.state.input.amount_ind_met}
-                        onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                        onChange={this.handleInputChange}
-                      />
-                      <InputGroupAddon addonType="append">$</InputGroupAddon>
-                    </InputGroup>
-                  </FormGroup>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-        <Row>
-          <Col xl={6} lg={12} md={12}>
-            <Card>
-              <CardBody>
-                  <FormGroup>
-                    <Label for="oop_max_family">OOP Max Family</Label>
-                    <InputGroup>
-                      <Input
-                        type="number"
-                        name="number"
-                        id="oop_max_family"
-                        placeholder="OOP Max Family"
-                        min="0"
-                        step="0.01"
-                        value={this.state.input.oop_max_family}
-                        onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                        onChange={this.handleInputChange}
-                      />
-                      <InputGroupAddon addonType="append">$</InputGroupAddon>
-                    </InputGroup>
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="amount_fam_opm_met">Amount Fam OPM Met</Label>
-                    <InputGroup>
-                      <Input
-                        type="number"
-                        name="number"
-                        id="amount_fam_opm_met"
-                        placeholder="Amount Fam OPM Met"
-                        min="0"
-                        step="0.01"
-                        value={this.state.input.amount_fam_opm_met}
-                        onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                        onChange={this.handleInputChange}
-                      />
-                      <InputGroupAddon addonType="append">$</InputGroupAddon>
-                    </InputGroup>
-                  </FormGroup>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col xl={6} lg={12} md={12}>
-            <Card>
-              <CardBody>
-                  <FormGroup>
-                    <Label for="oop_max_individual">OOP Max Individual</Label>
-                    <InputGroup>
-                      <Input
-                        type="number"
-                        name="number"
-                        id="oop_max_individual"
-                        placeholder="OOP Max Individual"
-                        min="0"
-                        step="0.01"
-                        value={this.state.input.oop_max_individual}
-                        onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                        onChange={this.handleInputChange}
-                      />
-                      <InputGroupAddon addonType="append">$</InputGroupAddon>
-                    </InputGroup>
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="amount_ind_opm_met">Amount Ind OPM Met</Label>
-                    <InputGroup>
-                      <Input
-                        type="number"
-                        name="number"
-                        id="amount_ind_opm_met"
-                        placeholder="Amount Ind OPM Met"
-                        min="0"
-                        step="0.01"
-                        value={this.state.input.amount_ind_opm_met}
-                        onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                        onChange={this.handleInputChange}
-                      />
-                      <InputGroupAddon addonType="append">$</InputGroupAddon>
-                    </InputGroup>
-                  </FormGroup>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-        <Row>
-          <Col xl={6} lg={12} md={12}>
-            <Card>
-              <CardBody>
-                  <FormGroup>
-                    <Label for="deductible_apply_option">Does Deductible Apply to OOP?</Label>
-                    <Input type="select" name="deductible_apply_option" 
-                      onChange={(event) => this.setState({does_deductible_aply_to_oop : (event.target.value === 'Yes' ? true : false)})}>
-                      <option>Yes</option>
-                      <option>No</option>
-                    </Input>
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="does_copay_apply_to_oop">Does Copay Apply to OOP?</Label>
-                    <Input type="select" name="does_copay_apply_to_oop"
-                    onChange={(event) => this.setState({does_copay_apply_to_oop : (event.target.value === 'Yes' ? true : false)})}>
-                      <option>Yes</option>
-                      <option>No</option>
-                    </Input>
-                  </FormGroup>      
-              </CardBody>
-            </Card>
-          </Col>
-          <Col xl={6} lg={12} md={12}>
-          <Card>
-              <CardBody>
-                  <FormGroup>
-                    <Label for="coverage">Coverage %</Label>
-                    <InputGroup>
-                      <Input
-                        type="number"
-                        name="number"
-                        id="coverage"
-                        placeholder="Coverage Percentage"
-                        min="0"
-                        value={this.state.input.coverage}
-                        onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                        onChange={this.handleInputChange}
-                      />
-                      <InputGroupAddon addonType="append">%</InputGroupAddon>
-                    </InputGroup>
-                  </FormGroup>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-        <Row>
-        <Col xl={6} lg={12} md={12}>
-          <Card>
-              <CardBody>
-                  <FormGroup>
-                    <Label for="co_pay_amount">Co-Pay Amount</Label>
-                    <InputGroup>
-                      <Input
-                        type="number"
-                        name="number"
-                        id="co_pay_amount"
-                        placeholder="Co-Pay Amount"
-                        min="0"
-                        step="0.01"
-                        value={this.state.input.co_pay_amount}
-                        onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                        onChange={this.handleInputChange}
-                      />
-                      <InputGroupAddon addonType="append">$</InputGroupAddon>
-                    </InputGroup>
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="co_pay_option">Co-Pay Per Day or Session</Label>
-                    <Input type="select" name="co_pay_option" 
-                    value={this.state.input.co_pay_per_day_or_session }
-                    onChange={(event) => {this.state.input.co_pay_per_day_or_session = event.target.value; this.forceUpdate()}}>
-                      <option value="0">Per Session</option>
-                      <option value="1">Per Day</option>
-                    </Input>
-                  </FormGroup>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col xl={6} lg={12} md={12}>
-          <Card>
-              <CardBody>
-                  <FormGroup>
-                    <Label for="max_visit">Max # of Visits</Label>
-                    <InputGroup>
-                      <Input
-                        type="number"
-                        name="number"
-                        id="max_visit"
-                        placeholder="Max # of Visits"
-                        min="0"
-                        value={this.state.input.max_visits}
-                        onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                        onChange={this.handleInputChange}
-                      />
-                    </InputGroup>
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="type_of_max">Type of Max</Label>
-                    <Input type="select" name="type_of_max"
-                      value={this.state.input.type_of_max}
-                      onChange={(event) => {this.state.input.type_of_max = event.target.value; this.forceUpdate()}}>
-                      <option>Hard</option>
-                      <option>Soft</option>
-                      <option>None</option>
-                    </Input>
-                  </FormGroup>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-        <Row>
-        <Col xl={6} lg={12} md={12}>
-          <Card>
-              <CardBody>
-                  <FormGroup>
-                    <Label for="insurance_provider">Insurance Provider</Label>
-                    <InputGroup>
-                      <Input type="select" name="insurance_provider"
-                        value={this.state.input.insurance_provider}
-                        onChange={(event) => {this.state.input.insurance_provider = event.target.value; this.forceUpdate()}}>
-                        {this.props.service.map(e =>
-                          <option>{e.provider}</option>
-                        )}
-                      </Input>
-                    </InputGroup>
-                  </FormGroup>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-        <Row>
-          <Col xl={10} lg={10} md={10}>
-            <Card>
-              <CardBody>
-                <ReactTable
-                  data={this.state.data}
-                  columns={[{
-                    Header: "Services",
-                    id: "full",
-                  accessor: d =>
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: d.service
-                      }}
-                    />
-                  }, {
-                    Header: "Requesting?",
-                  accessor: "requesting",
-                  Cell: this.renderEditable
-                  }, {
-                    Header: "Visit Limit Applies?",
-                  accessor: "visit_limit_applies",
-                  Cell: this.renderEditable
-                  }, {
-                    Header: "Session Per week",
-                  accessor: "session_per_week",
-                  Cell: this.renderEditable
-                  }, {
-                    Header: "Length of Session(Hrs)",
-                  accessor: "length_of_session",
-                  Cell: this.renderEditable
-                  },{
-                    Header: "Therapy Cost",
-                    id: 'therapy_cost',
-                    accessor: d =>
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: d.therapy_cost
-                      }}
-                    />
-                  }]}
-                defaultPageSize={5}
-                className="-striped -highlight"
-            />
-              </CardBody>
-            </Card>
-          </Col>
-          <Col xl={2} lg={2} md={2} style={{display: 'grid'}}>
-          <Button color="primary" onClick={this.toggle()}>Add Service</Button>
-            <Modal
-              isOpen={this.state.modal}
-              toggle={this.toggle()}
-              className={this.props.className}>
-              <ModalHeader toggle={this.toggle()}>Add Service</ModalHeader>
-              <ModalBody>
-                <FormGroup>
-                  <Label for="add_select_service">Select Service</Label>
-                  <Input type="select" name="add_select_service"
-                    value={this.state.add_service}
-                    onChange={(event) => {this.state.add_service = event.target.value; this.forceUpdate()}}>
-                    {
-                      this.props.service.length > 0 ? Object.keys(this.props.service[0]).map(key => {
-                      if (key !== 'provider')
-                        return <option>{key}</option>
-                      }) : null
-                    }
-                  </Input>
-                </FormGroup>
-                <FormGroup>
-                  <Label for="add_select_limit_applies">Select Limit applies</Label>
-                  <Input type="select" name="add_select_limit_applies"
-                    value={this.state.add_select_limit_applies}
-                      onChange={(event) => {this.state.add_select_limit_applies = event.target.value; this.forceUpdate()}}>
-                    <option>Yes</option>
-                    <option>No</option>
-                  </Input>
-                </FormGroup>
-                <FormGroup>
-                  <Label for="add_session_per_week">Session Per Week</Label>
-                  <Input
-                    type="number"
-                    name="add_session_per_week"
-                    id="max_visit"
-                    placeholder="Session Per week"
-                    min="0"
-                    value={this.state.add_session_per_week}
-                    onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                    onChange={(event) => {this.state.add_session_per_week = event.target.value; this.forceUpdate()}}
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <Label for="add_length_of_session">Length of Session(Hrs)</Label>
-                  <Input
-                    type="number"
-                    name="add_length_of_session"
-                    id="max_visit"
-                    placeholder="Length of Session"
-                    min="0"
-                    value={this.state.add_length_of_session}
-                    onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                    onChange={(event) => {this.state.add_length_of_session = event.target.value; this.forceUpdate()}}
-                  />
-                </FormGroup>
-
-              </ModalBody>
-              <ModalFooter>
-                <Button color="primary" onClick={this.addService()}>
-                  Add
-                </Button>{' '}
-                <Button color="secondary" onClick={this.toggle()}>
-                  Cancel
-                </Button>
-              </ModalFooter>
-            </Modal>
-          </Col>
-        </Row>
-        <Row>
-          <Col xl={6} lg={12} md={12}>
-            <Card>
-              <CardBody>
-                <FormGroup>
-                    <Label for="max_visit"># of Days of Therapy Per Week</Label>
-                      <Input
-                        type="number"
-                        name="number"
-                        id="days_per_week"
-                        placeholder="# of Days of Therapy Per Week"
-                        min="0"
-                        value={this.state.input.days_per_week}
-                        onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                        onChange={this.handleInputChange}
-                      />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="anticipated_first_date_of_therapy">Anticipated First Date of Therapy</Label>
-                    <DatePicker
-                        selected={this.state.input.anticipated_first_date_of_therapy}
-                        selectsStart
-                        startDate={this.state.input.anticipated_first_date_of_therapy}
-                        endDate={this.state.input.last_day_of_calendar_year}
-                        onChange={(date) => {this.state.input.anticipated_first_date_of_therapy = date; this.forceUpdate()}}
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="last_day_of_calendar_year">Last Day of Calendar Year</Label>
-                    <DatePicker
-                        selected={this.state.input.last_day_of_calendar_year}
-                        selectsEnd
-                        startDate={this.state.input.anticipated_first_date_of_therapy}
-                        endDate={this.state.input.last_day_of_calendar_year}
-                        onChange={(date) => {this.state.input.last_day_of_calendar_year = date; this.forceUpdate()}}
-                    />
-                  </FormGroup>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col xl={6} lg={12} md={12}>
-            <Card>
-              <CardBody>
-                <FormGroup>
-                    <Label for="max_visit">Assumed Cancel Rate</Label>
-                    <InputGroup>
-                      <Input
-                        type="number"
-                        name="number"
-                        id="assumed_cancel_rate"
-                        placeholder="Assumed Cancel Rate"
-                        min="0"
-                        step="0.01"
-                        value={this.state.input.assumed_cancel_rate}
-                        onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                        onChange={this.handleInputChange}
-                      />
-                      <InputGroupAddon addonType="append">%</InputGroupAddon>
-                    </InputGroup>
-                  </FormGroup>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-          <Col sm={{ size: 12, offset: 5 }}>
-            <Button color="primary" onClick={() => this.calculate()}>Calculate</Button>
-          </Col>
-        </TabPane>
-        <TabPane tabId="2">
-        <Row>
-        <Col xl={6} lg={12} md={12}>
-          <Card>
-            <CardBody>
-                <FormGroup>
-                  <Label for="family_deductible">Family Deductible</Label>
-                  <InputGroup>
-                    <Input
-                      type="number"
-                      name="number"
-                      id="family_deductible"
-                      placeholder="Family Deductible"
-                      min="0"
-                      step="0.01"
-                      value={this.state.input.family_deductible}
-                      onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                      onChange={this.handleInputChange}
-                    />
-                    <InputGroupAddon addonType="append">$</InputGroupAddon>
-                  </InputGroup>
-                </FormGroup>
-                <FormGroup>
-                  <Label for="amount_fam_met">Amount Fam Met</Label>
-                  <InputGroup>
-                    <Input
-                      type="number"
-                      name="number"
-                      id="amount_fam_met"
-                      placeholder="Amount Fam Met"
-                      min="0"
-                      step="0.01"
-                      value={this.state.input.amount_fam_met}
-                      onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                      onChange={this.handleInputChange}
-                    />
-                    <InputGroupAddon addonType="append">$</InputGroupAddon>
-                  </InputGroup>
-                </FormGroup>
-            </CardBody>
-          </Card>
-        </Col>
-        <Col xl={6} lg={12} md={12}>
-          <Card>
-            <CardBody>
-                <FormGroup>
-                  <Label for="individual_deductible">Individual Deductible</Label>
-                  <InputGroup>
-                    <Input
-                      type="number"
-                      name="number"
-                      id="individual_deductible"
-                      placeholder="Individual Deductible"
-                      min="0"
-                      step="0.01"
-                      value={this.state.input.individual_deductible}
-                      onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                      onChange={this.handleInputChange}
-                    />
-                    <InputGroupAddon addonType="append">$</InputGroupAddon>
-                  </InputGroup>
-                </FormGroup>
-                <FormGroup>
-                  <Label for="amount_ind_met">Amount Ind Met</Label>
-                  <InputGroup>
-                    <Input
-                      type="number"
-                      name="number"
-                      id="amount_ind_met"
-                      placeholder="Amount Ind Met"
-                      min="0"
-                      step="0.01"
-                      value={parseFloat(this.state.input.amount_ind_met).toFixed(2)}
-                      onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                      onChange={this.handleInputChange}
-                    />
-                    <InputGroupAddon addonType="append">$</InputGroupAddon>
-                  </InputGroup>
-                </FormGroup>
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
-      <Row>
-        <Col xl={6} lg={12} md={12}>
-          <Card>
-            <CardBody>
-                <FormGroup>
-                  <Label for="oop_max_family">OOP Max Family</Label>
-                  <InputGroup>
-                    <Input
-                      type="number"
-                      name="number"
-                      id="oop_max_family"
-                      placeholder="OOP Max Family"
-                      min="0"
-                      step="0.01"
-                      value={parseFloat(this.state.input.oop_max_family).toFixed(2)}
-                      onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                      onChange={this.handleInputChange}
-                    />
-                    <InputGroupAddon addonType="append">$</InputGroupAddon>
-                  </InputGroup>
-                </FormGroup>
-                <FormGroup>
-                  <Label for="amount_fam_opm_met">Amount Fam OPM Met</Label>
-                  <InputGroup>
-                    <Input
-                      type="number"
-                      name="number"
-                      id="amount_fam_opm_met"
-                      placeholder="Amount Fam OPM Met"
-                      min="0"
-                      step="0.01"
-                      value={parseFloat(this.state.input.amount_fam_opm_met).toFixed(2)}
-                      onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                      onChange={this.handleInputChange}
-                    />
-                    <InputGroupAddon addonType="append">$</InputGroupAddon>
-                  </InputGroup>
-                </FormGroup>
-            </CardBody>
-          </Card>
-        </Col>
-        <Col xl={6} lg={12} md={12}>
-          <Card>
-            <CardBody>
-                <FormGroup>
-                  <Label for="oop_max_individual">OOP Max Individual</Label>
-                  <InputGroup>
-                    <Input
-                      type="number"
-                      name="number"
-                      id="oop_max_individual"
-                      placeholder="OOP Max Individual"
-                      min="0"
-                      step="0.01"
-                      value={parseFloat(this.state.input.oop_max_individual).toFixed(2)}
-                      onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                      onChange={this.handleInputChange}
-                    />
-                    <InputGroupAddon addonType="append">$</InputGroupAddon>
-                  </InputGroup>
-                </FormGroup>
-                <FormGroup>
-                  <Label for="amount_ind_opm_met">Amount Ind OPM Met</Label>
-                  <InputGroup>
-                    <Input
-                      type="number"
-                      name="number"
-                      id="amount_ind_opm_met"
-                      placeholder="Amount Ind OPM Met"
-                      min="0"
-                      step="0.01"
-                      value={parseFloat(this.state.input.amount_ind_opm_met).toFixed(2)}
-                      onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                      onChange={this.handleInputChange}
-                    />
-                    <InputGroupAddon addonType="append">$</InputGroupAddon>
-                  </InputGroup>
-                </FormGroup>
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
-      <Row>
-        <Col xl={6} lg={12} md={12}>
-          <Card>
-            <CardBody>
-                <FormGroup>
-                  <Label for="deductible_apply_option">Does Deductible Apply to OOP?</Label>
-                  <Input type="select" name="deductible_apply_option" 
-                    onChange={(event) => this.setState({does_deductible_aply_to_oop : (event.target.value === 'Yes' ? true : false)})}>
-                    <option>Yes</option>
-                    <option>No</option>
-                  </Input>
-                </FormGroup>
-                <FormGroup>
-                  <Label for="does_copay_apply_to_oop">Does Copay Apply to OOP?</Label>
-                  <Input type="select" name="does_copay_apply_to_oop"
-                  onChange={(event) => this.setState({does_copay_apply_to_oop : (event.target.value === 'Yes' ? true : false)})}>
-                    <option>Yes</option>
-                    <option>No</option>
-                  </Input>
-                </FormGroup>      
-            </CardBody>
-          </Card>
-        </Col>
-        <Col xl={6} lg={12} md={12}>
-         <Card>
-            <CardBody>
-                <FormGroup>
-                  <Label for="coverage">Coverage %</Label>
-                  <InputGroup>
-                    <Input
-                      type="number"
-                      name="number"
-                      id="coverage"
-                      placeholder="Coverage Percentage"
-                      min="0"
-                      value={parseFloat(this.state.input.coverage)}
-                      onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                      onChange={this.handleInputChange}
-                    />
-                    <InputGroupAddon addonType="append">%</InputGroupAddon>
-                  </InputGroup>
-                </FormGroup>
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
-      <Row>
-       <Col xl={6} lg={12} md={12}>
-         <Card>
-            <CardBody>
-                <FormGroup>
-                  <Label for="co_pay_amount">Co-Pay Amount</Label>
-                  <InputGroup>
-                    <Input
-                      type="number"
-                      name="number"
-                      id="co_pay_amount"
-                      placeholder="Co-Pay Amount"
-                      min="0"
-                      step="0.01"
-                      value={parseFloat(this.state.input.co_pay_amount).toFixed(2)}
-                      onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                      onChange={this.handleInputChange}
-                    />
-                    <InputGroupAddon addonType="append">$</InputGroupAddon>
-                  </InputGroup>
-                </FormGroup>
-                <FormGroup>
-                  <Label for="co_pay_option">Co-Pay Per Day or Session</Label>
-                  <Input type="select" name="co_pay_option" 
-                  value={this.state.input.co_pay_per_day_or_session }
-                  onChange={(event) => {this.state.input.co_pay_per_day_or_session = event.target.value; this.forceUpdate()}}>
-                    <option value="0">Per Session</option>
-                    <option value="1">Per Day</option>
-                  </Input>
-                </FormGroup>
-            </CardBody>
-          </Card>
-        </Col>
-        <Col xl={6} lg={12} md={12}>
-         <Card>
-            <CardBody>
-                <FormGroup>
-                  <Label for="max_visit">Max # of Visits</Label>
-                  <InputGroup>
-                    <Input
-                      type="number"
-                      name="number"
-                      id="max_visit"
-                      placeholder="Max # of Visits"
-                      min="0"
-                      value={parseFloat(this.state.input.max_visits)}
-                      onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                      onChange={this.handleInputChange}
-                    />
-                  </InputGroup>
-                </FormGroup>
-                <FormGroup>
-                  <Label for="type_of_max">Type of Max</Label>
-                  <Input type="select" name="type_of_max"
-                    value={this.state.input.type_of_max}
-                    onChange={(event) => {this.state.input.type_of_max = event.target.value; this.forceUpdate()}}>
-                    <option>Hard</option>
-                    <option>Soft</option>
-                    <option>None</option>
-                  </Input>
-                </FormGroup>
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
-      <Row>
-       <Col xl={6} lg={12} md={12}>
-         <Card>
-            <CardBody>
-                <FormGroup>
-                  <Label for="insurance_provider">Insurance Provider</Label>
-                  <InputGroup>
-                    <Input type="select" name="insurance_provider"
-                      value={this.state.input.insurance_provider}
-                      onChange={(event) => {this.state.input.insurance_provider = event.target.value; this.forceUpdate()}}>
-                      {this.props.service.map(e =>
-                        <option>{e.provider}</option>
-                      )}
-                    </Input>
-                  </InputGroup>
-                </FormGroup>
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
-      <Row>
-        <Col xl={10} lg={10} md={10}>
-          <Card>
-            <CardBody>
-              <ReactTable
-                data={this.state.data}
-                columns={[{
-                  Header: "Services",
-                  id: "full",
-                accessor: d =>
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: d.service
-                    }}
-                  />
-                }, {
-                  Header: "Requesting?",
-                accessor: "requesting",
-                Cell: this.renderEditable
-                }, {
-                  Header: "Visit Limit Applies?",
-                accessor: "visit_limit_applies",
-                Cell: this.renderEditable
-                }, {
-                  Header: "Session Per week",
-                accessor: "session_per_week",
-                Cell: this.renderEditable
-                }, {
-                  Header: "Length of Session(Hrs)",
-                accessor: "length_of_session",
-                Cell: this.renderEditable
-                },{
-                  Header: "Therapy Cost",
-                  id: 'therapy_cost',
-                  accessor: d =>
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: d.therapy_cost
-                    }}
-                  />
-                }]}
-              defaultPageSize={5}
-              className="-striped -highlight"
-          />
-            </CardBody>
-          </Card>
-        </Col>
-        <Col xl={2} lg={2} md={2} style={{display: 'grid'}}>
-        <Button color="primary" onClick={this.toggle()}>Add Service</Button>
-          <Modal
-            isOpen={this.state.modal}
-            toggle={this.toggle()}
-            className={this.props.className}>
-            <ModalHeader toggle={this.toggle()}>Add Service</ModalHeader>
-            <ModalBody>
-              <FormGroup>
-                <Label for="add_select_service">Select Service</Label>
-                <Input type="select" name="add_select_service"
-                  value={this.state.add_service}
-                  onChange={(event) => {this.state.add_service = event.target.value; this.forceUpdate()}}>
-                  {
-                    this.props.service.length > 0 ? Object.keys(this.props.service[0]).map(key => {
-                    if (key !== 'provider')
-                      return <option>{key}</option>
-                    }) : null
-                  }
-                </Input>
-              </FormGroup>
-              <FormGroup>
-                <Label for="add_select_limit_applies">Select Limit applies</Label>
-                <Input type="select" name="add_select_limit_applies"
-                  value={this.state.add_select_limit_applies}
-                    onChange={(event) => {this.state.add_select_limit_applies = event.target.value; this.forceUpdate()}}>
-                  <option>Yes</option>
-                  <option>No</option>
-                </Input>
-              </FormGroup>
-              <FormGroup>
-                <Label for="add_session_per_week">Session Per Week</Label>
-                <Input
-                  type="number"
-                  name="add_session_per_week"
-                  id="max_visit"
-                  placeholder="Session Per week"
-                  min="0"
-                  value={this.state.add_session_per_week}
-                  onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                  onChange={(event) => {this.state.add_session_per_week = event.target.value; this.forceUpdate()}}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="add_length_of_session">Length of Session(Hrs)</Label>
-                <Input
-                  type="number"
-                  name="add_length_of_session"
-                  id="max_visit"
-                  placeholder="Length of Session"
-                  min="0"
-                  value={this.state.add_length_of_session}
-                  onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                  onChange={(event) => {this.state.add_length_of_session = event.target.value; this.forceUpdate()}}
-                />
-              </FormGroup>
-
-            </ModalBody>
-            <ModalFooter>
-              <Button color="primary" onClick={this.addService()}>
-                Add
-              </Button>{' '}
-              <Button color="secondary" onClick={this.toggle()}>
-                Cancel
-              </Button>
-            </ModalFooter>
-          </Modal>
-        </Col>
-      </Row>
-      <Row>
-        <Col xl={6} lg={12} md={12}>
-          <Card>
-            <CardBody>
-              <FormGroup>
-                  <Label for="max_visit"># of Days of Therapy Per Week</Label>
-                    <Input
-                      type="number"
-                      name="number"
-                      id="days_per_week"
-                      placeholder="# of Days of Therapy Per Week"
-                      min="0"
-                      value={this.state.input.days_per_week}
-                      onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                      onChange={this.handleInputChange}
-                    />
-                </FormGroup>
-                <FormGroup>
-                  <Label for="anticipated_first_date_of_therapy">Anticipated First Date of Therapy</Label>
-                  <DatePicker
-                      selected={this.state.input.anticipated_first_date_of_therapy}
-                      selectsStart
-                      startDate={this.state.input.anticipated_first_date_of_therapy}
-                      endDate={this.state.input.last_day_of_calendar_year}
-                      onChange={(date) => {this.state.input.anticipated_first_date_of_therapy = date; this.forceUpdate()}}
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <Label for="last_day_of_calendar_year">Last Day of Calendar Year</Label>
-                  <DatePicker
-                      selected={this.state.input.last_day_of_calendar_year}
-                      selectsEnd
-                      startDate={this.state.input.anticipated_first_date_of_therapy}
-                      endDate={this.state.input.last_day_of_calendar_year}
-                      onChange={(date) => {this.state.input.last_day_of_calendar_year = date; this.forceUpdate()}}
-                  />
-                </FormGroup>
-            </CardBody>
-          </Card>
-        </Col>
-        <Col xl={6} lg={12} md={12}>
-          <Card>
-            <CardBody>
-              <FormGroup>
-                  <Label for="max_visit">Assumed Cancel Rate</Label>
-                  <InputGroup>
-                    <Input
-                      type="number"
-                      name="number"
-                      id="assumed_cancel_rate"
-                      placeholder="Assumed Cancel Rate"
-                      min="0"
-                      step="0.01"
-                      value={parseFloat(this.state.input.assumed_cancel_rate)}
-                      onKeyPress={(event) => event.key === '-' ? event.preventDefault(): ''}
-                      onChange={this.handleInputChange}
-                    />
-                    <InputGroupAddon addonType="append">%</InputGroupAddon>
-                  </InputGroup>
-                </FormGroup>
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
-        <Col sm={{ size: 12, offset: 5 }}>
-          <Button color="primary" onClick={() => this.calculate()}>Calculate</Button>
-        </Col>
-        </TabPane>
-      </TabContent>
+     <Page title="Forms" breadcrumbs={[{ name: 'Forms', active: true }]}>
+      <Tabs onTabEdit={this.handleEdit}
+            onTabChange={this.handleTabChange}
+            activeIndex={activeIndex}
+            customStyle={customStyle}
+            ExtraButton={
+              <ExtraButton onClick={this.handleExtraButton}>
+                <Plus/>
+              </ExtraButton>
+      }>
+        <TabList>
+          {tabTemplate}
+        </TabList>
+        <PanelList>
+          <Panel key={1}>
+            <TabComponent {...this.props}></TabComponent>
+          </Panel>
+          <Panel key={2}>
+            <TabComponent {...this.props} secondary></TabComponent>
+          </Panel>
+        </PanelList>
+      </Tabs>
 
     </Page>
     );

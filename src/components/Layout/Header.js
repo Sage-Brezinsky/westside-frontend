@@ -94,7 +94,7 @@ class Header extends React.Component {
         <Nav navbar>
           <SearchInput />
         </Nav>
-        {
+        {/* {
           this.props.auth.token ? (
             <Nav navbar className={bem.e('nav-right')}>
             <NavItem>
@@ -143,7 +143,7 @@ class Header extends React.Component {
             </NavItem>
           </Nav>
           ) : null
-        }
+        } */}
       </Navbar>
     );
   }

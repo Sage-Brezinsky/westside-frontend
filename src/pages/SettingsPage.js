@@ -54,11 +54,17 @@ class SettingsPage extends React.Component {
       add_insurance_provider: '',
       editModalShow: false,
       service_to_change: '',
-      service_change_value: ''
+      service_change_value: '',
+      serviceEdit: false,
+      serviceEditIndex: null,
+      updatedServiceValue: '',
+      originalValue: ''
     };
     this.renderEditable = this.renderEditable.bind(this);
+    this.renderEditableService = this.renderEditableService.bind(this);
     this.handleServiceSelectChange = this.handleServiceSelectChange.bind(this);
     this.handleInsuranceProviderSelectChange = this.handleInsuranceProviderSelectChange.bind(this);
+    this.saveEditedService = this.saveEditedService.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
   }
 
@@ -150,28 +156,48 @@ class SettingsPage extends React.Component {
       );
     }
   }
-  removeService() {
-    var services = [];
-    _.map(this.state.service_value, (value) => {
-      services.push(value.label);
-    })
+
+  renderEditableService(cellInfo) {
+    if (cellInfo.index === this.state.serviceEditIndex)
+    {
+      return (<div
+        style={{ backgroundColor: "#fafafa" }}
+        contentEditable
+        suppressContentEditableWarning
+        onBlur={e => {
+          this.setState({updatedServiceValue: e.target.innerHTML, originalValue: cellInfo.original})
+        }}
+        dangerouslySetInnerHTML={{
+          __html: this.state.service_code[cellInfo.index]
+        }}
+      />)
+    }
+    else
+    {
+      return (<div
+        style={{ backgroundColor: "#fafafa" }}
+        dangerouslySetInnerHTML={{
+          __html: this.state.service_code[cellInfo.index]
+        }}
+      />)
+    }
+  }
+
+  removeService(ejectService) {
+
     var removedService = _.map(this.state.service, function (service) {
-      return _.omit(service, services);
+      return _.omit(service, ejectService);
     });
+    console.log(removedService)
     this.state.service = removedService;
-    _.pullAll(this.state.service_code, services);
     this.forceUpdate();
     this.generateServiceColumn();
     this.setSelectValue();
   }
 
-  removeInsuranceProvider() {
-    var insurance_provider = [];
-    _.map(this.state.insurance_provider_value, (value) => {
-      insurance_provider.push(value.label);
-    })
+  removeInsuranceProvider(provider) {
     var removedInsuranceProvider = this.state.service.filter((el) => {
-      return insurance_provider.indexOf(el.provider) < 0
+      return provider !== el.provider;
     })
     this.state.service = removedInsuranceProvider;
     this.forceUpdate();
@@ -255,7 +281,31 @@ class SettingsPage extends React.Component {
     this.props.dispatch(setServiceResult({service: this.state.service}))
   }
 
+  renameObjectKey = (obj, key, newKey) => {
+    if(_.includes(_.keys(obj), key)) {
+      obj[newKey] = _.clone(obj[key], true)
+      delete obj[key]
+    }
+    return obj
+  }
+  saveEditedService() {
+    var removedService = _.map(this.state.service, (service) => {
+      return this.renameObjectKey(service, this.state.originalValue, this.state.updatedServiceValue);
+    });
+    this.setState({serviceEdit: false, service: removedService});
+    this.generateServiceColumn();
+    this.setSelectValue();
+  }
+  generateServiceCode() {
+    let result = Object.keys(this.state.service[0]);
+    _.remove(result, function (el) {
+        return el === 'provider';  
+    });
+    this.state.service_code = result;
+    this.forceUpdate();
+  }
   generateServiceColumn() {
+    this.generateServiceCode();
     const serviceColumn = [];
 
     if (this.state.service && this.state.service.length > 0)
@@ -382,8 +432,8 @@ class SettingsPage extends React.Component {
                             accessor: 'remove',
                             width: 80,
                             Cell: row => (
-                              <div style={{marginLeft: 'auto', marginRight: 'auto'}}>
-                                <FaTrash />
+                              <div style={{height: '100%', cursor: 'pointer'}}>
+                                <FaTrash style={{display: 'block', margin: 'auto', height: '100%'}} onClick={() => this.removeInsuranceProvider(row.original.provider)}/>
                               </div>
                             )
                           }]}
@@ -414,24 +464,6 @@ class SettingsPage extends React.Component {
                       </div>    
                     </Col>
                   </Col>
-                  <Col sm="12" style={{marginBottom: '50px'}}>
-                    <Col sm="6" style={{display: 'inline-block'}}>
-                      <div style={{display: 'grid'}}>
-                       <Button color="primary" onClick={() => this.removeInsuranceProvider()}>Remove Insurance Provider</Button>
-                      </div>
-                    </Col>
-                    <Col sm="6" style={{display: 'inline-block'}}>
-                      <div style={{display: 'grid'}}>
-                        <Select
-                        name="form-field-name"
-                        value={this.state.insurance_provider_value}
-                        options={this.state.insurance_provider_initial}
-                        multi
-                        onChange={this.handleInsuranceProviderSelectChange}
-                        />
-                      </div>    
-                    </Col>
-                  </Col>
               </Col>
             </Row>
           </TabPane>
@@ -446,7 +478,29 @@ class SettingsPage extends React.Component {
                       Header: "Services",
                       id: 'therapy',
                       accessor: 'therapy',
-                      Cell: this.renderEditable
+                      Cell: this.renderEditableService
+                      }, {
+                        Header: 'Remove',
+                        accessor: 'remove',
+                        width: 80,
+                        Cell: row => this.state.serviceEdit && row.index == this.state.serviceEditIndex ? 
+                        (<div className="button save" onClick={() => this.saveEditedService()}>Save</div>) : (
+                        <div style={{height: '100%', cursor: 'pointer'}}>
+                          <FaTrash style={{display: 'block', margin: 'auto', height: '100%'}} onClick={() => this.removeService(row.original)}/>
+                        </div> 
+                        )
+                      }, {
+                        Header: 'Edit',
+                        accessor: 'edit',
+                        width: 80,
+                        Cell: row => this.state.serviceEdit && row.index == this.state.serviceEditIndex ? 
+                        (
+                          <div className="button cancel" onClick={() => this.setState({serviceEdit: false})}>Cancel</div>
+                        ) : (
+                          <div style={{height: '100%', cursor: 'pointer'}}>
+                            <FaPencil style={{display: 'block', margin: 'auto', height: '100%'}} onClick={() =>this.setState({serviceEditIndex: row.index, serviceEdit: true})}/>
+                          </div>
+                        )
                       }]}
                       defaultPageSize={this.state.service_code.length}
                       pageSize={this.state.service_code.length}
@@ -475,58 +529,6 @@ class SettingsPage extends React.Component {
                       </div>    
                     </Col>
                   </Col>
-                  <Col sm="12" style={{marginBottom: '50px'}}>
-                    <Col sm="6" style={{display: 'inline-block'}}>
-                      <div style={{display: 'grid'}}>
-                       <Button color="primary" onClick={() => this.removeService()}>Remove Service</Button>
-                      </div>
-                    </Col>
-                    <Col sm="6" style={{display: 'inline-block'}}>
-                      <div style={{display: 'grid'}}>
-                        <Select
-                        name="form-field-name"
-                        value={this.state.service_value}
-                        options={this.state.service_initial}
-                        multi
-                        onChange={this.handleServiceSelectChange}
-                        />
-                      </div>    
-                    </Col>
-                  </Col>
-                  <Col sm="12">
-                    <Col sm="6">
-                    <Button color="primary" onClick={this.toggleModal}>Rename Service</Button>
-                      <Modal
-                        isOpen={this.state.editModalShow}
-                        toggle={this.toggleModal}
-                        >
-                        <ModalHeader toggle={this.toggleModal}>Modal title</ModalHeader>
-                        <ModalBody>
-                          <FormGroup>
-                            <Label for="add_session_per_week">Service name ( Old )</Label>
-                            <Input
-                              onChange={(event) => {this.setState({service_to_change :event.target.value})}}
-                            />
-                          </FormGroup>
-                          <FormGroup>
-                            <Label for="add_length_of_session">Service name ( New )</Label>
-                            <Input
-                              onChange={(event) => {this.setState({service_change_value :event.target.value})}}
-                            />
-                          </FormGroup>
-
-                        </ModalBody>
-                        <ModalFooter>
-                          <Button color="primary" onClick={() => this.renameKeys()}>
-                            Confirm
-                          </Button>{' '}
-                          <Button color="secondary" onClick={() => this.setState({editModalShow: false})}>
-                            Cancel
-                          </Button>
-                        </ModalFooter>
-                      </Modal>
-                    </Col>
-                    </Col>
                 </Col>
               </Row>
           </TabPane>
@@ -538,6 +540,38 @@ class SettingsPage extends React.Component {
          }
          style={NOTIFICATION_SYSTEM_STYLE}
        />
+      <style jsx>
+        {`
+          .button {
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;
+          }
+          .save {
+            background-color: #4CAF50;
+            text-align: center;
+            border-radius: 5px;
+            border:3px solid #4CAF50;
+            color: white;
+          }
+          .save:hover {
+            background-color: white;
+            border:3px solid #4CAF50;
+            color: #555555;
+          }
+          .cancel {
+            background-color: #555555;
+            text-align: center;
+            border-radius: 5px;
+            border: 3px solid #555555;
+            color: white;
+          }
+          .cancel:hover {
+            background-color: white;
+            border: 3px solid #555555;
+            color: #555555;
+          }
+        `}
+      </style>
       </Page>
     );
   }

@@ -46,4 +46,5 @@ AvatarCard.defaultProps = {
   avatarSize: 80,
 };
 
+
 export default AvatarCard;
