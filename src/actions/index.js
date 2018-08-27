@@ -11,6 +11,7 @@ export const EDITOR_PAGE_UNLOADED = 'EDITOR_PAGE_UNLOADED';
 export const UPDATE_FIELD_AUTH = 'UPDATE_FIELD_AUTH';
 export const APP_LOAD='APP_LOAD';
 export const SERVICE_RESULT='SERVICE_RESULT';
+export const INPUT_RESULT='INPUT_RESULT';
 
 export const setCalculationResult = calculation => ({
   type: CALCULATION_RESULT,
@@ -20,4 +21,9 @@ export const setCalculationResult = calculation => ({
 export const setServiceResult = service => ({
   type: SERVICE_RESULT,
   service
+})
+
+export const setInputResult = input => ({
+  type: INPUT_RESULT,
+  input
 })

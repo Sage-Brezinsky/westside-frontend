@@ -8,6 +8,7 @@ import thunk from 'redux-thunk'
 import { createLogger } from 'redux-logger'
 import { promiseMiddleware, localStorageMiddleware } from './middleware';
 import reducer from './reducers';
+import * as moment from 'moment';
 const middleware = [ thunk ]
 
 if (process.env.NODE_ENV !== 'production') {
@@ -35,50 +36,10 @@ const initialState = {
     type_of_max: 'Soft',
     insurance_provider: 'BCBS',
     data: [
-      {
-        services: "Physical",
-        'requesting' : false,
-        'visit_limit_applies': false,
-        'session_per_week': 0,
-        'length_of_session': 1,
-        'week': 0
-      },
-      {
-        services: "Speech",
-        'requesting' : false,
-        'visit_limit_applies': false,
-        'session_per_week': 0,
-        'length_of_session': 1,
-        'week': 0
-      },
-      {
-        services: "ABA",
-        'requesting' : false,
-        'visit_limit_applies': false,
-        'session_per_week': 0,
-        'length_of_session': 4,
-        'week': 0
-      },
-      {
-        services: "Feeding",
-        'requesting' : true,
-        'visit_limit_applies': true,
-        'session_per_week': 1,
-        'length_of_session': 1,
-        'week': 145
-      },
-      {
-        services: "Occupation",
-        'requesting' : false,
-        'visit_limit_applies': false,
-        'session_per_week': 0,
-        'length_of_session': 1,
-        'week': 0
-      }
     ],
     days_per_week: 1,
-    anticipated_first_date_of_therapy: '',
-    last_day_of_calendar_year: '',
+    anticipated_first_date_of_therapy: moment(),
+    last_day_of_calendar_year: moment().endOf('year'),
     assumed_cancel_rate: 15
   },
   service: [
