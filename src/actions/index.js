@@ -12,6 +12,7 @@ export const UPDATE_FIELD_AUTH = 'UPDATE_FIELD_AUTH';
 export const APP_LOAD='APP_LOAD';
 export const SERVICE_RESULT='SERVICE_RESULT';
 export const INPUT_RESULT='INPUT_RESULT';
+export const TAB_INDEX='TAB_INDEX';
 
 export const setCalculationResult = calculation => ({
   type: CALCULATION_RESULT,
@@ -26,4 +27,9 @@ export const setServiceResult = service => ({
 export const setInputResult = input => ({
   type: INPUT_RESULT,
   input
+})
+
+export const setTabIndex = index => ({
+  type: TAB_INDEX,
+  index
 })

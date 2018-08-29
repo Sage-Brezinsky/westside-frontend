@@ -61,8 +61,6 @@ class TabComponent extends React.Component {
   }
 
   componentWillMount() {
-    this.state.input.anticipated_first_date_of_therapy = moment();
-    this.state.input.last_day_of_calendar_year = moment().endOf('year');
     // this is needed, because InfiniteCalendar forces window scroll
     window.scrollTo(0, 0);
     this.forceUpdate();
@@ -121,7 +119,7 @@ class TabComponent extends React.Component {
         family_deductible_remaining[therapy_week] = Math.max(family_deductible_remaining[therapy_week - 1] - deductible_payments[therapy_week], 0);
         individual_deductible_remaining[therapy_week] = Math.max(individual_deductible_remaining[therapy_week - 1] - deductible_payments[therapy_week], 0);
         co_pay_payments[therapy_week] = this.state.input.co_pay_per_day_or_session == 'Per Session' ? visits_per_week * this.state.input.co_pay_amount : days_per_week * this.state.input.co_pay_amount;
-        co_insurance_payments[therapy_week] = either_deductible_met[therapy_week] === 'No' ? 0 : therapy_costs_per_week[therapy_week] * (100 - this.state.input.coverage) / 100;
+        co_insurance_payments[therapy_week] = either_deductible_met[therapy_week] === 'No' ? 0 : (therapy_costs_per_week[therapy_week] - deductible_payments[therapy_week]) * (100 - this.state.input.coverage) / 100;
         oop_contributions_copays[therapy_week] = this.state.input.does_copay_apply_to_oop == 'Yes' ? co_pay_payments[therapy_week] : 0;
         oop_contributions_deductible[therapy_week] = this.state.input.does_deductible_aply_to_oop == 'Yes' ? deductible_payments[therapy_week] : 0;
         oop_contributions_coinsurance[therapy_week] = co_insurance_payments[therapy_week];
@@ -137,7 +135,7 @@ class TabComponent extends React.Component {
       {
         secondary_family_deductible_remaining[therapy_week] = Math.max(secondary_family_deductible_remaining[therapy_week - 1] - weekly_balance_for_patient[therapy_week], 0);
         secondary_individual_deductible_remaining[therapy_week] = Math.max(secondary_individual_deductible_remaining[therapy_week - 1] - weekly_balance_for_patient[therapy_week], 0);
-        secondary_either_deductible_met[therapy_week] = ((secondary_family_deductible_remaining[therapy_week] - weekly_balance_for_patient[therapy_week + 1] <= 0) || (secondary_individual_deductible_remaining[therapy_week] - weekly_balance_for_patient[therapy_week + 1] <= 0)) ? 'Yes': 'No';
+        secondary_either_deductible_met[therapy_week] = ((secondary_family_deductible_remaining[therapy_week - 1] - weekly_balance_for_patient[therapy_week + 1] <= 0) || (secondary_individual_deductible_remaining[therapy_week - 1] - weekly_balance_for_patient[therapy_week + 1] <= 0)) ? 'Yes': 'No';
         secondary_deductible_payments[therapy_week] = secondary_either_deductible_met[therapy_week] === 'Yes' ? Math.min(secondary_family_deductible_remaining[therapy_week - 1], secondary_individual_deductible_remaining[therapy_week - 1]) : weekly_balance_for_patient[therapy_week];
         secondary_co_pay_payments[therapy_week] = this.state.input.second_co_pay_per_day_or_session == 'Per Session' ? visits_per_week * this.state.input.secondary_co_pay_amount : days_per_week * this.state.input.secondary_co_pay_amount;
         secondary_co_insurance_payments[therapy_week] = secondary_either_deductible_met[therapy_week] === 'No' ? 0 : weekly_balance_for_patient[therapy_week] * (100 - this.state.input.secondary_coverage) / 100;
@@ -151,7 +149,6 @@ class TabComponent extends React.Component {
         secondary_accumulated_balance[therapy_week] = secondary_accumulated_balance[therapy_week - 1] + secondary_weekly_balance_for_patient[therapy_week];
       }
       var calculation_result = [];
-      console.log(family_deductible_remaining[0])
 
       for (var i = 0; i <= Math.min(this.state.input.max_visits, weeks_remaining); i ++ )
       {

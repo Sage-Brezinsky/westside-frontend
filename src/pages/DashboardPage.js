@@ -38,6 +38,8 @@ import {Tabs, TabList, Tab, PanelList, Panel, ExtraButton} from 'react-tabtab';
 import Plus from 'react-icons/lib/fa/plus';
 import * as customStyle from 'react-tabtab/lib/themes/material-design';
 import TabComponent from '../components/TabComponent';
+import {setTabIndex} from '../actions';
+
 class DashboardPage extends React.Component {
 
   constructor (props)
@@ -50,7 +52,7 @@ class DashboardPage extends React.Component {
       add_session_per_week: 1,
       add_length_of_session: 1,
       activeTab: 0,
-      tabLength: 1,
+      tabLength: this.props.tab,
       tabs: [{title: 'Primary', content: 'New Content'}, {title: 'Secondary', content: ''}]
     }
     this.state.input.insurance_provider = this.props.service.length > 0 ? this.props.service[0].provider : null;
@@ -65,6 +67,7 @@ class DashboardPage extends React.Component {
     // this is needed, because InfiniteCalendar forces window scroll
     window.scrollTo(0, 0);
     this.forceUpdate();
+    this.props.dispatch(setTabIndex(1));
     // console.log(this.state.input.co_pay_per_day_or_session)
   }
 
@@ -79,6 +82,7 @@ class DashboardPage extends React.Component {
   }
   handleExtraButton() {
     this.setState({tabLength: 2});
+    this.props.dispatch(setTabIndex(2));
   }
 
   handleTabChange(index) {
@@ -87,6 +91,7 @@ class DashboardPage extends React.Component {
 
   handleEdit({type, index}) {
     this.setState({tabLength: 1});
+    this.props.dispatch(setTabIndex(1));
   }
 
   toggle = modalType => () => {
@@ -151,10 +156,11 @@ class DashboardPage extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const { input, service } = state
+  const { input, service, tab } = state
   return {
     input,
-    service: service.service
+    service: service.service,
+    tab
   }
 }
 

@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 import {
-  CALCULATION_RESULT, SERVICE_RESULT, INPUT_RESULT
+  CALCULATION_RESULT, SERVICE_RESULT, INPUT_RESULT, TAB_INDEX
 } from '../actions'
 import auth from './auth';
 
@@ -31,11 +31,21 @@ const input = (state = '', action) => {
   }
 }
 
+const tab = (state = '', action) => {
+  switch (action.type) {
+  case TAB_INDEX:
+      return action.index;
+    default:
+      return state;
+  }
+}
+
 const rootReducer = combineReducers({
   input,
   calculation,
   auth,
-  service
+  service,
+  tab
 })
 
 export default rootReducer

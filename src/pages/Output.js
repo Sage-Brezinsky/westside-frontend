@@ -106,7 +106,7 @@ class OutputPage extends React.Component {
           accessor: d =>
             <div
               dangerouslySetInnerHTML={{
-                __html: d.total_oop_contributions
+                __html: d.weekly_balance_for_patient
               }}
             />
           },{

@@ -43,7 +43,8 @@ const initialState = {
     assumed_cancel_rate: 15
   },
   service: [
-  ]
+  ],
+  tab: 1
 }
 
 const store = createStore(reducer, initialState,  applyMiddleware(...middleware))
