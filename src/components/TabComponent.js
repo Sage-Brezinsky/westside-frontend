@@ -119,7 +119,7 @@ class TabComponent extends React.Component {
         family_deductible_remaining[therapy_week] = Math.max(family_deductible_remaining[therapy_week - 1] - deductible_payments[therapy_week], 0);
         individual_deductible_remaining[therapy_week] = Math.max(individual_deductible_remaining[therapy_week - 1] - deductible_payments[therapy_week], 0);
         co_pay_payments[therapy_week] = this.state.input.co_pay_per_day_or_session == 'Per Session' ? visits_per_week * this.state.input.co_pay_amount : days_per_week * this.state.input.co_pay_amount;
-        co_insurance_payments[therapy_week] = either_deductible_met[therapy_week] === 'No' ? 0 : (therapy_costs_per_week[therapy_week] - deductible_payments[therapy_week]) * (100 - this.state.input.coverage) / 100;
+        co_insurance_payments[therapy_week] = either_deductible_met[therapy_week] === 'No' ? 0 : (therapy_costs_per_week[therapy_week]) * (100 - this.state.input.coverage) / 100;
         oop_contributions_copays[therapy_week] = this.state.input.does_copay_apply_to_oop == 'Yes' ? co_pay_payments[therapy_week] : 0;
         oop_contributions_deductible[therapy_week] = this.state.input.does_deductible_aply_to_oop == 'Yes' ? deductible_payments[therapy_week] : 0;
         oop_contributions_coinsurance[therapy_week] = co_insurance_payments[therapy_week];

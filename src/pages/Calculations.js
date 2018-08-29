@@ -368,7 +368,6 @@ class CalculationsPage extends React.Component {
                 }}
               />
             },
-            (this.props.tab > 1 ? (
               {
                 Header: "Weekly Balance For Patient",
                 id: "weekly_balance_for_patient",
@@ -389,7 +388,6 @@ class CalculationsPage extends React.Component {
                   }}
                 />
               }
-            ) : '')
           ]
         },
         {
