@@ -83,7 +83,7 @@ class OutputPage extends React.Component {
               }}
             />
           },{
-            Header: "Co-Pay Insurance",
+            Header: "Co-Insurance",
             id: "co_insurance_payments",
           accessor: d =>
             <div
@@ -101,8 +101,8 @@ class OutputPage extends React.Component {
               }}
             />
           },{
-            Header: "Weekly Total",
-            id: "total_oop_contributions",
+            Header: "Amount Billed To Secondary",
+            id: "weekly_balance_for_patient",
           accessor: d =>
             <div
               dangerouslySetInnerHTML={{
@@ -110,12 +110,48 @@ class OutputPage extends React.Component {
               }}
             />
           },{
-            Header: "Accumulated Balance",
-            id: "accumulated_balance",
+            Header: "Secondary Deductible Payments",
+            id: "secondary_deductible_payments",
           accessor: d =>
             <div
               dangerouslySetInnerHTML={{
-                __html: d.accumulated_balance
+                __html: d.secondary_deductible_payments
+              }}
+            />
+          },{
+            Header: "Seconary Co-Insurance Payments",
+            id: "secondary_co_insurance_payments",
+          accessor: d =>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: d.secondary_co_insurance_payments
+              }}
+            />
+          },{
+            Header: "Secondary Co-Pay Payments",
+            id: "secondary_co_pay_payments",
+          accessor: d =>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: d.secondary_co_pay_payments
+              }}
+            />
+          },{
+            Header: "Weekly Balance For Patient",
+            id: "secondary_weekly_balance_for_patient",
+          accessor: d =>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: d.secondary_weekly_balance_for_patient
+              }}
+            />
+          },{
+            Header: "Weekly Accumulated Balance",
+            id: "secondary_accumulated_balance",
+          accessor: d =>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: d.secondary_accumulated_balance
               }}
             />
           } ]}
