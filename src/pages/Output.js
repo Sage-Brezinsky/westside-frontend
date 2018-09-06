@@ -27,7 +27,7 @@ class OutputPage extends React.Component {
     {
       Label.push(i);
       // console.log(this.props.calculation[i].total_oop_contributions)
-      Data.push(this.props.calculation[i].total_oop_contributions.substr(1))
+      Data.push(this.props.calculation[i].weekly_balance_for_patient.substr(1))
     }
     return {
       labels: Label,
