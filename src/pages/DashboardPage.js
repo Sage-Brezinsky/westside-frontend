@@ -67,7 +67,7 @@ class DashboardPage extends React.Component {
     // this is needed, because InfiniteCalendar forces window scroll
     window.scrollTo(0, 0);
     this.forceUpdate();
-    this.props.dispatch(setTabIndex(1));
+    // this.props.dispatch(setTabIndex(1));
     // console.log(this.state.input.co_pay_per_day_or_session)
   }
 

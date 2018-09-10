@@ -27,7 +27,10 @@ class OutputPage extends React.Component {
     {
       Label.push(i);
       // console.log(this.props.calculation[i].total_oop_contributions)
-      Data.push(this.props.calculation[i].weekly_balance_for_patient.substr(1))
+      if (this.props.tab == 1) 
+        Data.push(this.props.calculation[i].weekly_balance_for_patient.substr(1))
+      else
+        Data.push(this.props.calculation[i].secondary_weekly_balance_for_patient.substr(1))      
     }
     return {
       labels: Label,
@@ -166,10 +169,10 @@ class OutputPage extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const { calculation } = state
+  const { calculation, tab } = state
 
   return {
-    calculation
+    calculation, tab
   }
 }
 
